@@ -10,22 +10,41 @@ const Button = ({onClick, text}) =>
 const Display = ({name, value}) =>
     <div>{name}: {value}</div>
 
+const Stats = ({good, neutral, bad, displayStats}) => {
+    const totalFeedbacks = () =>
+        good + neutral + bad
+
+    const averageFeedback = () =>
+        (good - bad) / totalFeedbacks()
+
+    const percentOfGood = () =>
+        good / totalFeedbacks() * 100 + '%'
+
+    if (displayStats === false)
+        return <div>No feedback given</div>
+    else
+        return(
+            <div>
+                <Display name='Good' value={good} />
+                <Display name='Neutral' value={neutral} />
+                <Display name='Bad'  value={bad} />
+                <Display name='Total' value={totalFeedbacks()} />
+                <Display name='Average' value={averageFeedback()} />
+                <Display name='Positive' value={percentOfGood()} />
+            </div>
+        )
+}
+
 const App = () => {
     const [good, setGood] = useState(0)
     const [neutral, setNeutral] = useState(0)
     const [bad, setBad] = useState(0)
 
-    const incrementState = (state, setter) =>
+
+    const incrementState = (state, setter) => {
         setter(state + 1)
-
-    const totalFeedbacks = () =>
-        good + neutral + bad
-
-    const averageFeedback = () =>
-        good - bad / totalFeedbacks()
-
-    const percentOfGood = () =>
-        good / totalFeedbacks()
+        displayStats = true
+    }
 
     return(
         <div>
@@ -40,15 +59,16 @@ const App = () => {
                 onClick={() => incrementState(bad, setBad)}
                 text='Bad' />
             <Heading text='Statistics' />
-            <Display name='Good' value={good} />
-            <Display name='Neutral' value={neutral} />
-            <Display name='Bad' value={bad} />
-            <Display name='All' value={totalFeedbacks()} />
-            <Display name='Average' value={averageFeedback()} />
-            <Display name='Positive' value={percentOfGood()} />
+            <Stats
+                good={good}
+                neutral={neutral}
+                bad={bad}
+                displayStats={displayStats} />
         </div>
     )
 }
+
+let displayStats = false
 
 ReactDOM.render(
     <App />,
