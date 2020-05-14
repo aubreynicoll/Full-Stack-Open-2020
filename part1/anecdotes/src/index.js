@@ -29,8 +29,8 @@ const App = (props) => {
         setVotes(newVotes)
     }
 
-    const getTopVoted = (arr) => 
-        arr[votes.indexOf(Math.max(...votes))]
+    const getTopVoted = () => 
+        anecdotes[votes.indexOf(Math.max(...votes))]
         
     return (
         <div>
@@ -39,7 +39,7 @@ const App = (props) => {
             <Button text='Get Random Anecdote' onClick={getRandomAnecdote} />
             <Button text='Vote for this Anecdote' onClick={vote} />
             <Header text='Top Voted' />
-            <DisplayAnecdote text={getTopVoted(anecdotes)} votes={getTopVoted(votes)} />
+            <DisplayAnecdote text={getTopVoted()} votes={Math.max(...votes)} />
         </div>
     )
 }
