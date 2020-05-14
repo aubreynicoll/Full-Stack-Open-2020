@@ -18,6 +18,15 @@ const App = () => {
     const incrementState = (state, setter) =>
         setter(state + 1)
 
+    const totalFeedbacks = () =>
+        good + neutral + bad
+
+    const averageFeedback = () =>
+        good - bad / totalFeedbacks()
+
+    const percentOfGood = () =>
+        good / totalFeedbacks()
+
     return(
         <div>
             <Heading text='Give Feedback' />
@@ -34,6 +43,9 @@ const App = () => {
             <Display name='Good' value={good} />
             <Display name='Neutral' value={neutral} />
             <Display name='Bad' value={bad} />
+            <Display name='All' value={totalFeedbacks()} />
+            <Display name='Average' value={averageFeedback()} />
+            <Display name='Positive' value={percentOfGood()} />
         </div>
     )
 }
