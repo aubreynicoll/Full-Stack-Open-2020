@@ -3,25 +3,42 @@ import Entry from './components/Entry';
 
 const App = () => {
     const [persons, setPersons] = useState([
-        {name: 'Arto Hellas'}
+        {
+            name: 'Arto Hellas',
+            number: '867-5309'
+        }
     ])
     const [newName, setNewName] = useState('')
+    const [newNumber, setNewNumber] = useState('')
 
     const addPerson = (event) => {
         event.preventDefault()
         
-        if (!persons.some((person) => person.name === newName)) {
-            const newPersons = persons.concat({name: newName})
-            setPersons(newPersons)
-            setNewName('')
+        if (persons.some((person) => person.name === newName)) {
+            window.alert(`${newName} is already an entry.`)
+        }
+        else if (persons.some((person) => person.number === newNumber)) {
+            window.alert(`The number ${newNumber} is in use by another individual.`)
         }
         else {
-            window.alert(`${newName} is already an entry.`)
+            const newPersons = persons.concat(
+                {
+                    name: newName,
+                    number: newNumber
+                }
+            )
+            setPersons(newPersons)
+            setNewName('')
+            setNewNumber('')
         }
     }
 
     const handleInputNewName = (event) => {
         setNewName(event.target.value)
+    }
+
+    const handleInputNewNumber = (event) => {
+        setNewNumber(event.target.value)
     }
 
     return (
@@ -32,6 +49,11 @@ const App = () => {
                     name: <input 
                                 value={newName}
                                 onChange={handleInputNewName} />
+                </div>
+                <div>
+                    number: <input
+                                value={newNumber}
+                                onChange={handleInputNewNumber} />
                 </div>
                 <div>
                     <button type='submit'>add</button>
