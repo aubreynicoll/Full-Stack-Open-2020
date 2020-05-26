@@ -10,9 +10,14 @@ const App = () => {
     const addPerson = (event) => {
         event.preventDefault()
         
-        const newPersons = persons.concat({name: newName})
-        setPersons(newPersons)
-        setNewName('')
+        if (!persons.some((person) => person.name === newName)) {
+            const newPersons = persons.concat({name: newName})
+            setPersons(newPersons)
+            setNewName('')
+        }
+        else {
+            window.alert(`${newName} is already an entry.`)
+        }
     }
 
     const handleInputNewName = (event) => {
