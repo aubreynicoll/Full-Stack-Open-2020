@@ -1,18 +1,23 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Entry from './components/Entry';
 import NewEntryForm from './components/NewEntryForm';
 import Filter from './components/Filter';
 
+import axios from 'axios';
+
 const App = () => {
-    const [persons, setPersons] = useState([
-        {
-            name: 'Arto Hellas',
-            number: '867-5309'
-        }
-    ])
+    const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [searchName, setSearchName] = useState('')
+
+    useEffect(() => {
+      axios
+        .get('http://localhost:3001/persons')
+        .then((promise) => {
+          setPersons(promise.data)
+        })
+    }, [])
 
     const entriesToShow = searchName === ''
         ? persons
@@ -20,7 +25,7 @@ const App = () => {
 
     const addPerson = (event) => {
         event.preventDefault()
-        
+
         if (persons.some((person) => person.name === newName)) {
             window.alert(`${newName} is already an entry.`)
         }
@@ -60,16 +65,16 @@ const App = () => {
                 handleInputSearchName={handleInputSearchName} />
 
             <h2>Request for New Entry</h2>
-            <NewEntryForm 
+            <NewEntryForm
                 addPerson={addPerson}
                 newName={newName}
                 handleInputNewName={handleInputNewName}
-                newNumber={newNumber} 
+                newNumber={newNumber}
                 handleInputNewNumber={handleInputNewNumber} />
 
             <h2>Numbers</h2>
-            {entriesToShow.map((person) => 
-                <Entry 
+            {entriesToShow.map((person) =>
+                <Entry
                     key={person.name}
                     person={person} />
             )}
