@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import SearchBar from './components/SearchBar';
+import React, {useState, useEffect} from 'react'
+import SearchBar from './components/SearchBar'
+import CountryData from './components/CountryData'
 
 import axios from 'axios';
 
@@ -20,14 +21,32 @@ function App() {
   }
 
   const displaySearchResults = () => {
+    const filteredCountries = countries.filter((country) => country.name.toLowerCase().includes(searchName.toLowerCase()))
+
     if (searchName === '') {
       return
     }
-    else if (countries.filter((country) => country.name.toLowerCase().includes(searchName.toLowerCase()).length > 10)) {
-      return (<p>too many matches, please specify another filter</p>)
+    else if (filteredCountries.length > 10) {
+      return (
+        <p>too many matches, please specify another filter</p>
+      )
     }
-    else if (countries.filter((country) => country.name.toLowerCase().includes(searchName.toLowerCase()).length > 1)) {
-      return
+    else if (filteredCountries.length > 1) {
+      return (
+        filteredCountries.map((country) =>
+          <p key={country.name}>{country.name}</p>
+        )
+      )
+    }
+    else if (filteredCountries.length === 1) {
+      return (
+        <CountryData country={filteredCountries[0]} />        
+      )
+    }
+    else {
+      return (
+        <p>no matches</p>
+      )
     }
   }
 
@@ -38,11 +57,9 @@ function App() {
         searchName={searchName}
         searchInputHandler={searchInputHandler}
       />
-      <div>
-        {displaySearchResults()}
-      </div>
+      {displaySearchResults()}
     </div>
   )
 }
 
-export default App;
+export default App
