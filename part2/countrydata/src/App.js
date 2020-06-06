@@ -3,7 +3,7 @@ import SearchBar from './components/SearchBar'
 import CountryData from './components/CountryData'
 import ShowDataButton from './components/ShowDataButton'
 
-import axios from 'axios';
+import axios from 'axios'
 
 function App() {
   const [countries, setCountries] = useState([])
