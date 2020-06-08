@@ -21,7 +21,7 @@
     {
       "content": "test",
       "date": "2020-06-08T09:27:21.553Z",
-      "important": true,
+      "important": false,
       "id": 4
     }
   ]
