@@ -33,15 +33,18 @@ const App = () => {
             window.alert(`The number ${newNumber} is in use by another individual.`)
         }
         else {
-            const newPersons = persons.concat(
-                {
-                    name: newName,
-                    number: newNumber
-                }
-            )
-            setPersons(newPersons)
-            setNewName('')
-            setNewNumber('')
+            const newPerson = {
+              name: newName,
+              number: newNumber
+            }
+            axios
+              .post('http://localhost:3001/persons', newPerson)
+              .then(promise => {
+                const newPersons = persons.concat(promise.data)
+                setPersons(newPersons)
+                setNewName('')
+                setNewNumber('')
+              })
         }
     }
 
