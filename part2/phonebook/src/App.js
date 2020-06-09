@@ -26,7 +26,10 @@ const App = () => {
     const addPerson = (event) => {
         event.preventDefault()
 
-        if (persons.some(person => person.name === newName)) {
+        if (persons.some((person) => person.number === newNumber)) {
+            window.alert(`The number ${newNumber} is in use by another individual.`)
+        }
+        else if (persons.some(person => person.name === newName)) {
           const person = persons.find(p => p.name === newName)
 
           const result = window.confirm(`${person.name} is already an entry. do you wish to update the entry?`)
@@ -41,10 +44,7 @@ const App = () => {
                 setNewNumber('')
               })
           }
-        }
-        else if (persons.some((person) => person.number === newNumber)) {
-            window.alert(`The number ${newNumber} is in use by another individual.`)
-        }
+        }         
         else {
             const newPerson = {
               name: newName,
