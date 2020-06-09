@@ -38,13 +38,24 @@ const App = () => {
               number: newNumber
             }
             personsService
-              .create(newPerson)
+              .createPerson(newPerson)
               .then(createdPerson => {
                 setPersons(persons.concat(createdPerson))
                 setNewName('')
                 setNewNumber('')
               })
         }
+    }
+
+    const deletePerson = (person) => {
+      const result = window.confirm(`this will delete ${person.name}. are you sure?`)
+      if (result) {
+        personsService
+          .deletePerson(person.id)
+          .then(deletedPerson => {
+            setPersons(persons.filter(p => p.id !== person.id))
+          })
+      }
     }
 
     const handleInputSearchName = (event) => {
@@ -78,7 +89,8 @@ const App = () => {
             {entriesToShow.map((person) =>
                 <Entry
                     key={person.name}
-                    person={person} />
+                    person={person}
+                    deletePerson={() => deletePerson(person)} />
             )}
         </div>
     )
