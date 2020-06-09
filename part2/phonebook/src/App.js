@@ -26,8 +26,21 @@ const App = () => {
     const addPerson = (event) => {
         event.preventDefault()
 
-        if (persons.some((person) => person.name === newName)) {
-            window.alert(`${newName} is already an entry.`)
+        if (persons.some(person => person.name === newName)) {
+          const person = persons.find(p => p.name === newName)
+
+          const result = window.confirm(`${person.name} is already an entry. do you wish to update the entry?`)
+
+          if (result) {
+            const newPerson = {...person, number: newNumber}
+            personsService
+              .updatePerson(person.id, newPerson)
+              .then(updatedPerson => {
+                setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson))
+                setNewName('')
+                setNewNumber('')
+              })
+          }
         }
         else if (persons.some((person) => person.number === newNumber)) {
             window.alert(`The number ${newNumber} is in use by another individual.`)
