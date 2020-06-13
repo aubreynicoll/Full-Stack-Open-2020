@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Entry from './components/Entry';
 import NewEntryForm from './components/NewEntryForm';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 
 import personsService from './services/persons'
 
@@ -10,6 +11,7 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [searchName, setSearchName] = useState('')
+    const [notificationMessage, setNotificationMessage] = useState(null)
 
     useEffect(() => {
       personsService
@@ -40,6 +42,10 @@ const App = () => {
               .updatePerson(person.id, newPerson)
               .then(updatedPerson => {
                 setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson))
+                setNotificationMessage(`${updatedPerson.name}'s number was successfully updated`)
+                setTimeout(() => {
+                  setNotificationMessage(null)
+                }, 2000)
                 setNewName('')
                 setNewNumber('')
               })
@@ -54,6 +60,10 @@ const App = () => {
               .createPerson(newPerson)
               .then(createdPerson => {
                 setPersons(persons.concat(createdPerson))
+                setNotificationMessage(`${createdPerson.name}'s number was successfully added`)
+                setTimeout(() => {
+                  setNotificationMessage(null)
+                }, 2000)
                 setNewName('')
                 setNewNumber('')
               })
@@ -67,6 +77,10 @@ const App = () => {
           .deletePerson(person.id)
           .then(deletedPerson => {
             setPersons(persons.filter(p => p.id !== person.id))
+            setNotificationMessage(`${person.name}'s number was successfully deleted`)
+                setTimeout(() => {
+                  setNotificationMessage(null)
+                }, 2000)
           })
       }
     }
@@ -86,6 +100,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={notificationMessage} />
             <Filter
                 searchName={searchName}
                 handleInputSearchName={handleInputSearchName} />
