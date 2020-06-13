@@ -29,23 +29,34 @@ const App = () => {
         event.preventDefault()
 
         if (persons.some((person) => person.number === newNumber)) {
-            window.alert(`The number ${newNumber} is in use by another individual.`)
+            setNotificationMessage(`The number ${newNumber} is in use by another individual.`)
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 2000)
         }
         else if (persons.some(person => person.name === newName)) {
-          const person = persons.find(p => p.name === newName)
-
-          const result = window.confirm(`${person.name} is already an entry. do you wish to update the entry?`)
-
-          if (result) {
+          const result = window.confirm(`${newName} is already an entry. do you wish to update the entry?`)
+          
+          if (result) {       
+            const person = persons.find(p => p.name === newName)     
             const newPerson = {...person, number: newNumber}
             personsService
               .updatePerson(person.id, newPerson)
               .then(updatedPerson => {
                 setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson))
-                setNotificationMessage(`${updatedPerson.name}'s number was successfully updated`)
+                setNotificationMessage(`${person.name}'s number was successfully updated`)
                 setTimeout(() => {
                   setNotificationMessage(null)
                 }, 2000)
+                setNewName('')
+                setNewNumber('')
+              })
+              .catch(() => {
+                setPersons(persons.filter(p => p.id !== person.id))
+                setNotificationMessage(`${person.name}'s number has been removed from the server`)
+                setTimeout(() => {
+                  setNotificationMessage(null)
+                }, 2000)                
                 setNewName('')
                 setNewNumber('')
               })
@@ -81,6 +92,13 @@ const App = () => {
                 setTimeout(() => {
                   setNotificationMessage(null)
                 }, 2000)
+          })
+          .catch(() => {
+            setPersons(persons.filter(p => p.id !== person.id))
+            setNotificationMessage(`${person.name}'s number has been removed from the server`)
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 2000)
           })
       }
     }
