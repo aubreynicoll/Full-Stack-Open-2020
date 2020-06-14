@@ -20,7 +20,7 @@ const CountryData = ({country}) => {
   }, [])
 
   const displayWeatherData = () => {
-    if (typeof weatherData !== "undefined") {
+    if (weatherData) {
       return (
         <>
           <h3>weather in {country.capital}</h3>
