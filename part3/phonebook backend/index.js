@@ -29,6 +29,10 @@ let persons = [
   }
 ]
 
+app.get('/info', (req, res) => {
+  res.send(`the phonebook has ${persons.length} entries\n\n${new Date()}`)
+})
+
 app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
