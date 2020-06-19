@@ -1,18 +1,20 @@
+// import deps
 import React, {useState, useEffect} from 'react';
 import Entry from './components/Entry';
 import NewEntryForm from './components/NewEntryForm';
 import Filter from './components/Filter';
 import Notification from './components/Notification';
-
 import personsService from './services/persons'
 
 const App = () => {
+    // define state
     const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [searchName, setSearchName] = useState('')
     const [notificationMessage, setNotificationMessage] = useState(null)
 
+    // load DB
     useEffect(() => {
       personsService
         .getAll()
@@ -115,6 +117,7 @@ const App = () => {
         setNewNumber(event.target.value)
     }
 
+    // return JSX
     return (
         <div>
             <h2>Phonebook</h2>
