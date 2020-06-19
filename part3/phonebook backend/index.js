@@ -54,20 +54,14 @@ app.post('/api/persons', (req, res) => {
   if (!body.number) {
     return res.status(400).json({ error: 'number is missing' })    
   }
-  if (persons.some(p => p.name === body.name)) {
-    return res.status(400).json({ error: 'name must be unique' })    
-  }
-  if (persons.some(p => p.number === body.number)) {
-    return res.status(400).json({ error: 'number must be unique' })    
-  }
 
-  const newPerson = {
+  const person = new Person({
     name: body.name,
-    number: body.number,
-    id: generateId()
-  }
-  persons = persons.concat(newPerson)
-  res.json(newPerson)
+    number: body.number
+  })
+  person.save().then(newPerson => {
+    res.json(newPerson)
+  })
 })
 
 const unknownEndpoint = (req, res) => {
