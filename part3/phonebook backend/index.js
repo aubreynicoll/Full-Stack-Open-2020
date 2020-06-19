@@ -1,24 +1,37 @@
+// require deps
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const Person = require('./models/person')
 
+// define middleware data
 morgan.token('data', (req, res) => {
   return JSON.stringify(req.body)
 })
 
+// define middleware functions
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' })
+}
+const errorHandler = (error, req, res, next) => {
+  console.log(error.message)
+
+  if (error.name === 'CastError') {
+    res.status(400).send({ error: 'malformed id' })
+  }
+
+  next(error)
+}
+
+// set up express & early middleware
 const app = express()
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 app.use(cors())
 app.use(express.static('build'))
 app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
-
-const generateId = () => {
-  return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
-}
-
+// handle REST  methods
 app.get('/info', (req, res) => {
   res.send(`the phonebook has ${persons.length} entries\n\n${new Date()}`)
 })
@@ -38,11 +51,12 @@ app.get('/api/persons/:id', (req, res) => {
   : res.status(404).end()
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  persons = persons.filter(p => p.id !== id)
-
-  res.status(204).end()
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res) => {
@@ -64,11 +78,11 @@ app.post('/api/persons', (req, res) => {
   })
 })
 
-const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: 'unknown endpoint' })
-}
+// set up late middleware
 app.use(unknownEndpoint)
+app.use(errorHandler)
 
+// listen
 const port = process.env.PORT || 3001
 app.listen(port, () => {
   console.log(`server listening on port ${port}`)  

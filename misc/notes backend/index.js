@@ -2,6 +2,9 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
+const Note = require('./models/note')
+
+// define middleware functions
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
   console.log('Path:  ', request.path)
@@ -9,41 +12,50 @@ const requestLogger = (request, response, next) => {
   console.log('---')
   next()
 }
-const Note = require('./models/note')
-const { response } = require('express')
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+const errorHandler = (error, req, res, next) => {
+  console.log(error.message)
 
-// set up express & middleware
-const app = express()
-app.use(cors())
-app.use(express.json())
-app.use(express.static('build'))
-app.use(requestLogger)
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformed id' })
+  }
 
-const generateId = () => {
-  const maxId = notes.length > 0 
-  ? Math.max(...notes.map(n => n.id)) 
-  : 0
-
-  return maxId + 1
+  next(error)
 }
 
+// set up express & early middleware
+const app = express()
+app.use(cors())
+app.use(express.static('build'))
+app.use(express.json())
+app.use(requestLogger)
+
+
+// handle REST methods
 app.get('/api/notes', (req, res) => {
   Note.find({}).then(notes => {
     res.json(notes)
   })
 })
 
-app.get('/api/notes/:id', (req, res) => {
-  Note.findById(req.params.id).then(note => {
-    res.json(note)
-  })
+app.get('/api/notes/:id', (req, res, next) => {
+  Note.findById(req.params.id)
+    .then(note => {
+      note
+      ? res.json(note)
+      : res.status(404).end()
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/notes/:id', (req, res) => {
-  const id = Number(req.params.id)
-  notes = notes.filter(n => n.id !== id)
-
-  res.status(204).end()
+  Note.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/notes', (req, res) => {      
@@ -67,19 +79,21 @@ app.post('/api/notes', (req, res) => {
 app.put('/api/notes/:id', (req, res) => {
   const body = req.body
   const note = {
-    ...body,
+    content: body.content,
     important: body.important
   }
-  notes = notes.map(n => n.id !== note.id ? n : note)
-
-  res.send(note)
+  Note.findByIdAndUpdate(req.params.id, note, { new: true })
+    .then(updatedNote => {
+      res.json(updatedNote)
+    })
+    .catch(error => next(error))
 })
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
+// set up late middleware
 app.use(unknownEndpoint)
+app.use(errorHandler)
 
+// listen
 const port = process.env.PORT || 3001
 app.listen(port, () => {
   console.log(`server listening on port ${port}`)
