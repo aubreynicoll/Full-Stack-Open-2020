@@ -1,45 +1,19 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
-const app = express()
+const Person = require('./models/person')
 
 morgan.token('data', (req, res) => {
   return JSON.stringify(req.body)
 })
 
+const app = express()
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 app.use(cors())
 app.use(express.static('build'))
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 app.use(express.json())
 
-
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1
-  },
-  {
-    name: "Bruce Wayne",
-    number: "040-098765",
-    id: 2
-  },
-  {
-    name: "Mr. Kobayashi",
-    number: "040-456345",
-    id: 3
-  },
-  {
-    name: "Brock",
-    number: "040-890678",
-    id: 4
-  },
-  {
-    name: "Ozzy Osbourne",
-    number: "040-123456",
-    id: 5
-  }
-]
 
 const generateId = () => {
   return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
@@ -50,7 +24,9 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  Person.find({}).then(persons => {
+    res.json(persons)
+  })
 })
 
 app.get('/api/persons/:id', (req, res) => {
