@@ -4,6 +4,7 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const Person = require('./models/person')
+const person = require('./models/person')
 
 // define middleware data
 morgan.token('data', (req, res) => {
@@ -31,9 +32,11 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
-// handle REST  methods
+// handle REST methods
 app.get('/info', (req, res) => {
-  res.send(`the phonebook has ${persons.length} entries\n\n${new Date()}`)
+  Person.count({}, (err, count) => {
+    res.send(`the phonebook has ${count} entries\n\n${new Date()}`)
+  })
 })
 
 app.get('/api/persons', (req, res) => {
@@ -42,13 +45,14 @@ app.get('/api/persons', (req, res) => {
   })
 })
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(p => p.id === id)
-
-  person
-  ? res.json(person)
-  : res.status(404).end()
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then(person => {
+      person
+      ? res.json(person)
+      : res.status(404).end()
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -78,7 +82,7 @@ app.post('/api/persons', (req, res) => {
   })
 })
 
-app.put('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
   const body = req.body
   const person = {
     name: body.name,
