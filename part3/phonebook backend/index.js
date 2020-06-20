@@ -6,7 +6,7 @@ const morgan = require('morgan')
 const Person = require('./models/person')
 
 // define middleware data
-morgan.token('data', (req, res) => {
+morgan.token('data', (req) => {
   return JSON.stringify(req.body)
 })
 
@@ -51,15 +51,15 @@ app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id)
     .then(person => {
       person
-      ? res.json(person)
-      : res.status(404).end()
+        ? res.json(person)
+        : res.status(404).end()
     })
     .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -100,5 +100,5 @@ app.use(errorHandler)
 // listen
 const port = process.env.PORT || 3001
 app.listen(port, () => {
-  console.log(`server listening on port ${port}`)  
+  console.log(`server listening on port ${port}`)
 })

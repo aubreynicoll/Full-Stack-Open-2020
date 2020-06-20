@@ -47,21 +47,21 @@ app.get('/api/notes/:id', (req, res, next) => {
   Note.findById(req.params.id)
     .then(note => {
       note
-      ? res.json(note)
-      : res.status(404).end()
+        ? res.json(note)
+        : res.status(404).end()
     })
     .catch(error => next(error))
 })
 
-app.delete('/api/notes/:id', (req, res) => {
+app.delete('/api/notes/:id', (req, res, next) => {
   Note.findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
 })
 
-app.post('/api/notes', (req, res, next) => {      
+app.post('/api/notes', (req, res, next) => {
   const body = req.body
 
   const note = new Note({
@@ -77,7 +77,7 @@ app.post('/api/notes', (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.put('/api/notes/:id', (req, res) => {
+app.put('/api/notes/:id', (req, res, next) => {
   const body = req.body
   const note = {
     content: body.content,
