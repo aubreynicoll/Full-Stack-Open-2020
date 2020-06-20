@@ -53,15 +53,13 @@ const App = () => {
                 setNewName('')
                 setNewNumber('')
               })
-              .catch(() => {
-                setPersons(persons.filter(p => p.id !== person.id))
-                setNotificationMessage(`${person.name}'s number has been removed from the server`)
+              .catch(error => {
+                console.log(error.response.data.error)                
+                setNotificationMessage(error.response.data.error)
                 setTimeout(() => {
                   setNotificationMessage(null)
                 }, 2000)                
-                setNewName('')
-                setNewNumber('')
-              })
+              })              
           }
         }         
         else {
@@ -79,6 +77,13 @@ const App = () => {
                 }, 2000)
                 setNewName('')
                 setNewNumber('')
+              })
+              .catch(error => {
+                console.log(error.response.data.error)                
+                setNotificationMessage(error.response.data.error)
+                setTimeout(() => {
+                  setNotificationMessage(null)
+                }, 2000)  
               })
         }
     }
