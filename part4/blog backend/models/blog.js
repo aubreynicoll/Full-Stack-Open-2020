@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { transform } = require('lodash')
 
 const blogSchema = mongoose.Schema({
   title: String,
