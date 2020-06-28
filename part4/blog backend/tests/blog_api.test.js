@@ -48,6 +48,23 @@ test('a blog post can be added', async () => {
   expect(allBlogs).toContainEqual(res.body)
 })
 
+test('missing likes field defaults to 0', async () => {
+  const newBlog = new Blog({
+    title: '11 Music Blogs You Should Follow in 2019',
+    author: 'some dude',
+    url: 'https://www.mi.edu/in-the-know/11-music-blogs-follow-2019/'
+  })
+
+  const res = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  expect(res.body.likes).toBeDefined()
+  expect(res.body.likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
