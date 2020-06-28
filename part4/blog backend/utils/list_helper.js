@@ -22,7 +22,9 @@ const mostBlogs = (blogs) => {
 
   blogs = _.countBy(blogs, 'author')
   blogs = _.toPairs(blogs)
-  blogs = blogs.map(blog => {return { author: blog[0], blogs: blog[1] }})
+  blogs = blogs.map(blog => {
+    return { author: blog[0], blogs: blog[1] }
+  })
 
   return blogs.reduce((rsf, blog) => rsf.blogs >= blog.blogs ? rsf : blog)
 }
@@ -39,7 +41,11 @@ const mostLikes = (blogs) => {
       results = results.concat({ author: blog.author, likes: blog.likes })
     }
     else {
-      results = results.map(result => {return result.author === blog.author ? { author: result.author, likes: result.likes += blog.likes } : result})
+      results = results.map(result => {
+        return result.author === blog.author
+          ? { author: result.author, likes: result.likes += blog.likes }
+          : result
+      })
     }
   })
 
