@@ -65,6 +65,19 @@ test('missing likes field defaults to 0', async () => {
   expect(res.body.likes).toBe(0)
 })
 
+test('missing title and url throws status 400 error', async () => {
+  const newBlog = new Blog({
+    author: 'some dude',
+    likes: 9001
+  })
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
