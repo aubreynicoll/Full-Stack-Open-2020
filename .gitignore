@@ -1,4 +1,5 @@
 **/.DS_Store
 **/node_modules
+**/.env
 part3/.DS_Store
 misc/.DS_Store
