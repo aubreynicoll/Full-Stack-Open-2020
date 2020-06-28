@@ -73,6 +73,16 @@ test('all blogs are returned as JSON', async () => {
   expect(res.body).toHaveLength(initialBlogs.length)
 })
 
+test('unique identifier is Blog.id', async () => {
+  const res = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  console.log(res.body)
+  expect(res.body[0].id).toBeDefined()
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
