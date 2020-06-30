@@ -21,7 +21,7 @@ const initializeDb = async () => {
 }
 
 const nonexistantId = async () => {
-  const note = new Note({ content: 'n/a' })
+  const note = new Note({ content: 'fake ass note' })
   await note.save()
   await note.remove()
 

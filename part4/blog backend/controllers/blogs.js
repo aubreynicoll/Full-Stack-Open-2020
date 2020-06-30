@@ -19,4 +19,20 @@ blogsRouter.post('/', async (request, response) => {
   response.status(201).json(result)
 })
 
+blogsRouter.put('/:id', async (request, response) => {
+  const body = request.body
+
+  const note = {
+    likes: body.likes
+  }
+
+  const updatedNote = await Blog.findByIdAndUpdate(request.params.id, note, { new: true })
+  response.json(updatedNote)
+})
+
+blogsRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndRemove(request.params.id)
+  response.status(204).end()
+})
+
 module.exports = blogsRouter
