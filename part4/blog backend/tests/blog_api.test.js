@@ -32,12 +32,12 @@ describe('http GET', () => {
 
 describe('http POST', () => {
   test('a blog post can be added', async () => {
-    const newBlog = new Blog({
+    const newBlog = {
       title: '11 Music Blogs You Should Follow in 2019',
       author: 'some dude',
       url: 'https://www.mi.edu/in-the-know/11-music-blogs-follow-2019/',
       likes: 5
-    })
+    }
 
     const res = await api
       .post('/api/blogs')
@@ -52,11 +52,11 @@ describe('http POST', () => {
   })
 
   test('missing likes field defaults to 0', async () => {
-    const newBlog = new Blog({
+    const newBlog = {
       title: '11 Music Blogs You Should Follow in 2019',
       author: 'some dude',
       url: 'https://www.mi.edu/in-the-know/11-music-blogs-follow-2019/'
-    })
+    }
 
     const res = await api
       .post('/api/blogs')
@@ -69,10 +69,10 @@ describe('http POST', () => {
   })
 
   test('missing title and url throws status 400 error', async () => {
-    const newBlog = new Blog({
+    const newBlog = {
       author: 'some dude',
       likes: 9001
-    })
+    }
 
     await api
       .post('/api/blogs')

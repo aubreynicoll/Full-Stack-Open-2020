@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlogs = [
   {
@@ -51,6 +52,19 @@ const initialBlogs = [
   }
 ]
 
+const initialUsers = [
+  {
+    username: 'root',
+    name: 'goku',
+    password: '>9000'
+  },
+  {
+    username: 'johnd',
+    name: 'john doe',
+    password: 'dragon'
+  }
+]
+
 const initializeDb = async () => {
   await Blog.deleteMany({})
 
@@ -60,13 +74,30 @@ const initializeDb = async () => {
   await Promise.all(promises)
 }
 
+const initializeUsers = async () => {
+  await User.deleteMany({})
+
+  const users = initialUsers.map(user => new User(user))
+  const promises = users.map(user => user.save())
+
+  await Promise.all(promises)
+}
+
 const getAllBlogs = async () => {
   const allBlogs = await Blog.find({})
   return allBlogs.map(blog => blog.toJSON())
 }
 
+const getAllUsers = async () => {
+  const allUsers = await User.find({})
+  return allUsers.map(user => user.toJSON())
+}
+
 module.exports = {
   initialBlogs,
+  initialUsers,
   initializeDb,
-  getAllBlogs
+  initializeUsers,
+  getAllBlogs,
+  getAllUsers
 }
