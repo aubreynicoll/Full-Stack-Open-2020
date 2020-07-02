@@ -7,6 +7,7 @@ const helper = require('./test_helper')
 
 beforeEach(async () => {
   await helper.initializeDb()
+  await helper.initializeUsers()
 })
 
 describe('http GET', () => {
@@ -37,17 +38,20 @@ describe('http POST', () => {
       url: 'https://www.mi.edu/in-the-know/11-music-blogs-follow-2019/',
       likes: 5
     }
+    const token = await helper.getToken()
 
     const res = await api
       .post('/api/blogs')
+      .set({ authorization: 'bearer ' + token })
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const allBlogs = await helper.getAllBlogs()
+    const titles = allBlogs.map(blog => blog.title)
 
-    expect(allBlogs).toHaveLength(helper.initialBlogs.length + 1)
-    expect(allBlogs).toContainEqual(res.body)
+    expect(titles).toHaveLength(helper.initialBlogs.length + 1)
+    expect(titles).toContain(res.body.title)
   })
 
   test('missing likes field defaults to 0', async () => {
@@ -56,9 +60,11 @@ describe('http POST', () => {
       author: 'some dude',
       url: 'https://www.mi.edu/in-the-know/11-music-blogs-follow-2019/'
     }
+    const token = await helper.getToken()
 
     const res = await api
       .post('/api/blogs')
+      .set({ authorization: 'bearer ' + token })
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -72,12 +78,33 @@ describe('http POST', () => {
       author: 'some dude',
       likes: 9001
     }
+    const token = await helper.getToken()
 
     await api
       .post('/api/blogs')
+      .set({ authorization: 'bearer ' + token })
       .send(newBlog)
       .expect(400)
       .expect('Content-Type', /application\/json/)
+  })
+
+  test('missing token throws 401', async () => {
+    const newBlog = {
+      title: '11 Music Blogs You Should Follow in 2019',
+      author: 'some dude',
+      url: 'https://www.mi.edu/in-the-know/11-music-blogs-follow-2019/',
+      likes: 5
+    }
+
+    const res = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    const allBlogs = await helper.getAllBlogs()
+
+    expect(allBlogs).toHaveLength(helper.initialBlogs.length)
   })
 })
 

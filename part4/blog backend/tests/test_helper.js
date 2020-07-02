@@ -1,5 +1,8 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const supertest = require('supertest')
+const app = require('../app')
+const api = supertest(app)
 
 const initialBlogs = [
   {
@@ -77,8 +80,7 @@ const initializeDb = async () => {
 const initializeUsers = async () => {
   await User.deleteMany({})
 
-  const users = initialUsers.map(user => new User(user))
-  const promises = users.map(user => user.save())
+  const promises = initialUsers.map(user => api.post('/api/users').send(user))
 
   await Promise.all(promises)
 }
@@ -93,11 +95,20 @@ const getAllUsers = async () => {
   return allUsers.map(user => user.toJSON())
 }
 
+const getToken = async () => {
+  const login = await api
+    .post('/api/login')
+    .send({ username: 'johnd', password: 'dragon' })
+
+  return login.body.token
+}
+
 module.exports = {
   initialBlogs,
   initialUsers,
   initializeDb,
   initializeUsers,
   getAllBlogs,
-  getAllUsers
+  getAllUsers,
+  getToken
 }
