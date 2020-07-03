@@ -6,8 +6,8 @@ const helper = require('./test_helper')
 
 
 beforeEach(async () => {
-  await helper.initializeDb()
   await helper.initializeUsers()
+  await helper.initializeDb()
 })
 
 describe('http GET', () => {
@@ -96,7 +96,7 @@ describe('http POST', () => {
       likes: 5
     }
 
-    const res = await api
+    await api
       .post('/api/blogs')
       .send(newBlog)
       .expect(401)
@@ -124,7 +124,7 @@ describe('http PUT', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-    expect(updatedNote.body).toEqual(newNote)
+    expect(updatedNote.body.likes).toBe(newNote.likes)
   })
 })
 

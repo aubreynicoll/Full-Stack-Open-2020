@@ -1,5 +1,6 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const bcrypt = require('bcrypt')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
@@ -68,11 +69,22 @@ const initialUsers = [
   }
 ]
 
-const initializeDb = async () => {
+const initializeBlogs = async () => {
   await Blog.deleteMany({})
+  const user = await User.findOne({ username: 'johnd' })
 
-  const blogs = initialBlogs.map(blog => new Blog(blog))
-  const promises = blogs.map(blog => blog.save())
+  const promises = initialBlogs.map(async blog => {
+    const newBlog = new Blog({
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes || 0,
+      user: user._id,
+      _id: blog._id
+    })
+
+    return newBlog.save()
+  })
 
   await Promise.all(promises)
 }
@@ -80,7 +92,17 @@ const initializeDb = async () => {
 const initializeUsers = async () => {
   await User.deleteMany({})
 
-  const promises = initialUsers.map(user => api.post('/api/users').send(user))
+  const promises = initialUsers.map(async user => {
+    const passwordHash = await bcrypt.hash(user.password, 10)
+
+    const newUser = new User({
+      username: user.username,
+      name: user.name,
+      passwordHash
+    })
+
+    return newUser.save()
+  })
 
   await Promise.all(promises)
 }
@@ -106,7 +128,7 @@ const getToken = async () => {
 module.exports = {
   initialBlogs,
   initialUsers,
-  initializeDb,
+  initializeDb: initializeBlogs,
   initializeUsers,
   getAllBlogs,
   getAllUsers,

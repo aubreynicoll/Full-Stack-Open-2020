@@ -5,8 +5,8 @@ const mongoose = require('mongoose')
 const helper = require('./test_helper')
 
 beforeEach(async () => {
-  await helper.initializeDb()
   await helper.initializeUsers()
+  await helper.initializeDb()
 })
 
 test('user can log in', async () => {

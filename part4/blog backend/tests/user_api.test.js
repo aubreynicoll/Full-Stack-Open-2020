@@ -2,12 +2,11 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const mongoose = require('mongoose')
-const User = require('../models/user')
 const helper = require('./test_helper')
-const { post } = require('../app')
 
 beforeEach(async () => {
   await helper.initializeUsers()
+  await helper.initializeDb()
 })
 
 describe('adding a user...', () => {
