@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './App.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState('')
   const [author, setAuthor] = useState('')
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
@@ -23,9 +25,17 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+
+      setNotification(`logged in as ${user.name}`)
+      setTimeout(() => {
+        setNotification('')
+      }, 5000)
     }
     catch (exception) {
-      console.log('invalid creds, chummer')
+      setNotification('invalid creds, chummer')
+      setTimeout(() => {
+        setNotification('')
+      }, 5000)
     }
   }
 
@@ -33,6 +43,11 @@ const App = () => {
     window.localStorage.removeItem('loggedInUser')
     blogService.setToken(null)
     setUser(null)
+
+    setNotification('logged out successfully')
+      setTimeout(() => {
+        setNotification('')
+      }, 5000)
   }
 
   const handleCreateNew = async (event) => {
@@ -40,9 +55,31 @@ const App = () => {
     try {
       const createdBlog = await blogService.createNew({ title, author, url })
       setBlogs(blogs.concat(createdBlog))
+
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+
+      setNotification(`${createdBlog.title} by ${createdBlog.author} created successfully`)
+      setTimeout(() => {
+        setNotification('')
+      }, 5000)
     }
     catch (exception) {
-      console.log('blog creation failed')
+      setNotification('blog creation failed')
+      setTimeout(() => {
+        setNotification('')
+      }, 5000)
+    }
+  }
+
+  const displayNotification = () => {
+    if (notification) {
+      return (
+        <div>
+          <p class="Notification">{notification}</p>
+        </div>
+      )
     }
   }
 
@@ -65,6 +102,7 @@ const App = () => {
     return (
       <div>
         <h2>login</h2>
+        {displayNotification()}
         <form onSubmit={handleLogin}>
           <div>
             username: 
@@ -93,6 +131,7 @@ const App = () => {
       <div>
         <div>
           <h2>blogs</h2>
+          {displayNotification()}
           <p>
             logged in as {user.name} <button type="button" onClick={handleLogout}>logout</button>
           </p>                  
@@ -127,12 +166,10 @@ const App = () => {
             <button type="submit">create new</button>
           </form>
         </div>
-        <div>
-          <p>
-            {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} />
-            )}
-          </p>
+        <div>          
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}          
         </div>
       </div>
     )
