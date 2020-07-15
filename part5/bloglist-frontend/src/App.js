@@ -67,6 +67,16 @@ const App = () => {
     }
   }
 
+  const handleLike = async (blog) => {
+    const newBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+
+    const updatedBlog = await blogService.updateLikes(newBlog)
+    setBlogs(blogs.map(b => b.id === updatedBlog.id ? updatedBlog : b))
+  }
+
   const displayNotification = () => {
     if (notification) {
       return (
@@ -132,7 +142,10 @@ const App = () => {
       <div>    
         <h2>blogs</h2>      
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog 
+            key={blog.id} 
+            blog={blog}
+            handleLike={handleLike} />
         )}          
       </div>
     </div>
