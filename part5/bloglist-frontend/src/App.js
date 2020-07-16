@@ -77,6 +77,14 @@ const App = () => {
     setBlogs(blogs.map(b => b.id === updatedBlog.id ? updatedBlog : b))
   }
 
+  const handleRemoveBlog = async (blogToRemove) => {
+    const result = window.confirm(`do you really want to ${blogToRemove.title} ${blogToRemove.author}? do you really want to make me cry?`)
+    if (result) {
+      await blogService.removeBlog(blogToRemove.id)
+      setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+    }    
+  }
+
   const displayNotification = () => {
     if (notification) {
       return (
@@ -148,7 +156,9 @@ const App = () => {
             <Blog 
               key={blog.id} 
               blog={blog}
-              handleLike={handleLike} />
+              currentUser={user ? user.username : null}
+              handleLike={() => handleLike(blog)}
+              handleRemoveBlog={() => handleRemoveBlog(blog)} />
           )
         }          
       </div>
