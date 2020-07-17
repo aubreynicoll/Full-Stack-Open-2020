@@ -4,3 +4,5 @@
 part3/.DS_Store
 misc/.DS_Store
 **/.env.swp
+misc/notes/.eslintrc.js
+misc/notes/.eslintignore
