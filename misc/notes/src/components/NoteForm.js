@@ -6,13 +6,13 @@ const NoteForm = ({ addNote }) => {
   const onSubmit = (event) => {
     event.preventDefault()
     addNote({
-      content: newNote      
+      content: newNote
     })
     setNewNote('')
   }
 
   return (
-    <div>
+    <div className="formDiv">
       <h2>create a new note</h2>
 
       <form onSubmit={onSubmit}>
