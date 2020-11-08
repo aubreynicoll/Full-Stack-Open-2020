@@ -1,56 +1,57 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const CreateBlogForm = ({ handleCreateNew }) => {
+const CreateBlogForm = ({ createBlog }) => {
+  CreateBlogForm.propTypes = {
+    createBlog: PropTypes.func.isRequired
+  }
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const create = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
-    handleCreateNew(title, author, url)
-
+    createBlog({ title, author, url })
     setTitle('')
     setAuthor('')
     setUrl('')
   }
 
   return (
-    <div className="CreateBlogForm">
+    <div>
       <h2>create new</h2>
-      <form onSubmit={create}>
+      <form onSubmit={handleSubmit}>
         <div>
-          title:
-          <input
+          title: <br />
+          <input 
             type="text"
-            id="Title"
+            name="Title"
             value={title}
-            onChange={({ target }) => setTitle(target.value)} />
+            onChange={({ target }) => setTitle(target.value)}
+            />
         </div>
         <div>
-          author:
-          <input
+          author: <br />
+          <input 
             type="text"
-            id="Author"
+            name="Author"
             value={author}
-            onChange={({ target }) => setAuthor(target.value)} />
+            onChange={({ target }) => setAuthor(target.value)}
+          />
         </div>
         <div>
-          url:
-          <input
+          url: <br />
+          <input 
             type="text"
-            id="Url"
+            name="URL"
             value={url}
-            onChange={({ target }) => setUrl(target.value)} />
+            onChange={({ target }) => setUrl(target.value)}
+          />
         </div>
-        <button type="submit">create new</button>
+        <button type="submit">create blog</button>
       </form>
     </div>
   )
-}
-
-CreateBlogForm.propTypes = {
-  handleCreateNew: PropTypes.func.isRequired
 }
 
 export default CreateBlogForm

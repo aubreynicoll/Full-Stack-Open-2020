@@ -1,7 +1,0 @@
-PUT http://localhost:3001/api/notes/5eeacde4d5948c2486c9f871
-Content-Type: application/json
-
-{
-  "content": "VS CODE ROX",
-  "important": true
-}
