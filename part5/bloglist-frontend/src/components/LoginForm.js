@@ -10,7 +10,7 @@ const LoginForm = ({ login }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    login({ username, password })
+    login(username, password)
     setUsername('')
     setPassword('')
   }

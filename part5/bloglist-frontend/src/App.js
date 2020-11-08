@@ -27,9 +27,9 @@ const App = () => {
     }
   }, [])
 
-  const login = async (credentials) => {
+  const login = async (username, password) => {
     try {
-      const user = await loginService.login(credentials)
+      const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       blogService.setToken(user.token)  
       setUser(user)
@@ -45,10 +45,10 @@ const App = () => {
     setUser(null)    
   }
 
-  const createBlog = async (blog) => {
+  const createBlog = async (title, author, url) => {
     try {
       createBlogFormRef.current.toggleIsVisible()
-      const savedBlog = await blogService.createNew(blog)
+      const savedBlog = await blogService.createNew({ title, author, url })
       setBlogs(blogs.concat(savedBlog))
     } catch (exception) {
       console.error(exception)

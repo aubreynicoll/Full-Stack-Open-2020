@@ -14,12 +14,16 @@ describe('<Blog />', () => {
       name: 'morpheus'
     }
   }
-  const likeBlog = jest.fn()
-  const removeBlog = jest.fn()
-  const createdByUser = true
+  let likeBlog
+  let removeBlog
+  let createdByUser
   let component
 
   beforeEach(() => {
+    likeBlog = jest.fn()
+    removeBlog = jest.fn()
+    createdByUser = true
+    
     component = render(
       <Blog 
         blog={blog}
@@ -50,7 +54,7 @@ describe('<Blog />', () => {
   })
 
   test('when like button is clicked n times, handler is called n times', () => {
-    const n = 5
+    const n = 2
     const likeButton = component.container.querySelector('.likeBlogButton')
 
     for (let count = 0; count < n; count++) {
