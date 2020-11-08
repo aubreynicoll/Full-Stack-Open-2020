@@ -5,57 +5,38 @@ import Blog from './Blog'
 
 describe('<Blog />', () => {
   const blog = {
-    title: 'butts and you',
-    author: 'Pat the Butt',
-    url: 'www.buttstuff.com',
+    title: 'React is fun!',
+    author: 'The Zuck',
+    url: 'www.facebook.com',
     likes: 1,
     user: {
-      username: 'bigbuttz69',
-      name: 'Pat'
+      username: 'zuckburger',
+      name: 'morpheus'
     }
   }
-  const currentUser = 'BigButtz69'
-  const handleLike = jest.fn()
-  const handleRemoveBlog = jest.fn()
+  const likeBlog = jest.fn()
+  const removeBlog = jest.fn()
+  const createdByUser = true
   let component
 
   beforeEach(() => {
     component = render(
-      <Blog
+      <Blog 
         blog={blog}
-        currentUser={currentUser}
-        handleLike={handleLike}
-        handleRemoveBlog={handleRemoveBlog}
+        likeBlog={likeBlog}
+        removeBlog={removeBlog}
+        createdByUser={createdByUser}
       />
     )
   })
 
-  test('Blog renders title & author by default. Url & likes are hidden.', () => {
+  test('renders title and author by default', () => {
     const div = component.container.querySelector('.div')
     const togglableContent = component.container.querySelector('.togglableContent')
 
-    expect(div).toHaveTextContent('butts and you')
-    expect(div).toHaveTextContent('Pat the Butt')
-    expect(togglableContent).toHaveStyle('display: none')
-  })
-
-  test('Url & likes are shown when the button is clicked', () => {
-    const togglableContent = component.container.querySelector('.togglableContent')
-    const button = component.getByText('show')
+    expect(div).toHaveTextContent('React is fun!')
+    expect(div).toHaveTextContent('The Zuck')
 
     expect(togglableContent).toHaveStyle('display: none')
-    fireEvent.click(button)
-    expect(togglableContent).not.toHaveStyle('display: none')
-  })
-
-  test('The like button calls likeBlog()', () => {
-    const button = component.getByText('like')
-    const loops = 2
-
-    for (let i = 0; i < loops; i++) {
-      fireEvent.click(button)
-    }
-
-    expect(handleLike.mock.calls).toHaveLength(loops)
   })
 })
