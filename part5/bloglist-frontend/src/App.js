@@ -148,7 +148,7 @@ const App = () => {
       </div>
       <div>
         <h2>blogs</h2>
-        {blogs
+        {[...blogs]
           .sort((a, b) => {
             return b.likes - a.likes
           })

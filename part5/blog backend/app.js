@@ -25,6 +25,10 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(tokenExtractor)
 
+if (config.NODE_ENV === 'test') {
+  app.use('/api/testing', require('./controllers/testing'))
+}
+
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
