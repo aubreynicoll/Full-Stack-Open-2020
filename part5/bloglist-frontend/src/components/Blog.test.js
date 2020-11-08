@@ -39,4 +39,23 @@ describe('<Blog />', () => {
 
     expect(togglableContent).toHaveStyle('display: none')
   })
+
+  test('renders url and likes when the toggle button is clicked', () => {
+    const togglableContent = component.container.querySelector('.togglableContent')
+    const toggleButton = component.container.querySelector('.toggleBlogDetailsButton')
+
+    expect(togglableContent).toHaveStyle('display: none')
+    fireEvent.click(toggleButton)
+    expect(togglableContent).not.toHaveStyle('display: none')
+  })
+
+  test('when like button is clicked n times, handler is called n times', () => {
+    const n = 5
+    const likeButton = component.container.querySelector('.likeBlogButton')
+
+    for (let count = 0; count < n; count++) {
+      fireEvent.click(likeButton)
+    }
+    expect(likeBlog.mock.calls).toHaveLength(n)
+  })
 })
