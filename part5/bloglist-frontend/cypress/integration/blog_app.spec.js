@@ -58,14 +58,34 @@ describe('Blog App', function() {
           cy.createBlog({
             title: 'another blog',
             author: 'anon',
-            url: '4chan'
+            url: '4chan',
+            likes: 3
           })          
+          cy.createBlog({
+            title: 'third blog',
+            author: 'morpheus',
+            url: 'THE MATRIX',
+            likes: 2
+          })     
         })
 
         it('user may like a blog', function() {
           cy.contains('another blog by anon').find('.toggleBlogDetailsButton').click()
           cy.contains('another blog by anon').find('.likeBlogButton').click()
-          cy.contains('another blog by anon').contains('1')
+          cy.contains('another blog by anon').contains('4')
+        })
+
+        it('user may delete a blog', function() {
+          cy.contains('another blog by anon').find('.deleteBlogButton').click()
+          cy.should('not.contain', 'another blog by anon')
+        })
+
+        it('blogs are sorted by likes', function() {
+          cy.get('.blog').first().contains('3')
+          cy.get('.blog').first().next().contains('2')
+          cy.get('.blog').first().next().next().contains('0')
+
+
         })
       })
     })
