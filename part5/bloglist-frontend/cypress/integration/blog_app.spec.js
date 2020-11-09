@@ -66,7 +66,7 @@ describe('Blog App', function() {
           cy.contains('another blog by anon').find('.toggleBlogDetailsButton').click()
           cy.contains('another blog by anon').find('.likeBlogButton').click()
           cy.contains('another blog by anon').contains('1')
-        })ø
+        })
       })
     })
   })
