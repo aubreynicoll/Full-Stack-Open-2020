@@ -9,6 +9,7 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   const createBlogFormRef = useRef()
 
@@ -35,6 +36,10 @@ const App = () => {
       setUser(user)
     } catch (exception) {
       console.error(exception)
+      setNotification('wrong username or password')
+      setTimeout(() => {
+        setNotification(null)
+      }, 3000)
     }    
   }
 
@@ -107,6 +112,13 @@ const App = () => {
 
   return (
     <div>
+      <h1>Blog App</h1>
+
+      {notification === null
+        ? null
+        : <p>{notification}</p>
+      }
+
       {user === null
         ? loginForm()
         : appInterface()
