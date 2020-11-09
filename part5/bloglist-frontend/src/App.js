@@ -81,7 +81,7 @@ const App = () => {
   const appInterface = () => {
     return (
       <div>
-        <p>Welcome Back, {user.name}. <button onClick={handleLogout}>log out</button></p>
+        <p>logged in as {user.name} <button onClick={handleLogout}>log out</button></p>
 
         <Togglable buttonText="create blog" ref={createBlogFormRef}>
           <CreateBlogForm
