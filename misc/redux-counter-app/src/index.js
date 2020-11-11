@@ -1,17 +1,42 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { createStore } from 'redux'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const countReducer = (state = 0, action) => {
+  switch (action.type) {
+    case 'INCREMENT':
+      return state + 1
+    case 'DECREMENT':
+      return state - 1
+    case 'RESET':
+      return 0
+    default:
+      return state
+  }
+}
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const store = createStore(countReducer)
+
+const App = () => {
+
+
+  return (
+    <div>
+      <div>
+        {store.getState()}
+      </div>
+      <div>
+        <button onClick={() => store.dispatch({ type: 'DECREMENT' })}>-1</button>
+        <button onClick={() => store.dispatch({ type: 'RESET' })}>reset</button>
+        <button onClick={() => store.dispatch({ type: 'INCREMENT' })}>+1</button>
+      </div>
+    </div>
+  )
+}
+
+const renderApp = () => {
+  ReactDOM.render(<App />, document.getElementById('root'))
+}
+
+renderApp()
+store.subscribe(renderApp)
