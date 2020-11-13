@@ -9,12 +9,14 @@ const CreateAnecdoteForm = () => {
   const addAnecdote = (event) => {
     event.preventDefault()
     const anecdote = event.target.anecdote.value
-    event.target.anecdote.value = ''
-    dispatch(createAnecdote(anecdote))
-    dispatch(setNotification(`You created '${anecdote}'`))
-    setTimeout(() => {
-      dispatch(removeNotification())
-    }, 5000)
+    if (anecdote) {
+      event.target.anecdote.value = ''
+      dispatch(createAnecdote(anecdote))
+      dispatch(setNotification(`You created '${anecdote}'`))
+      setTimeout(() => {
+        dispatch(removeNotification())
+      }, 5000)
+    }
   }
 
   return (
