@@ -1,4 +1,4 @@
-const initialState = 'This is a test'
+const initialState = null
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -13,6 +13,13 @@ export const setNotification = (string) => {
   return {
     type: 'SET_NOTIFICATION',
     notification: string
+  }
+}
+
+export const removeNotification = () => {
+  return {
+    type: 'SET_NOTIFICATION',
+    notification: null
   }
 }
 
