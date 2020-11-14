@@ -1,3 +1,5 @@
+import notesService from '../services/notesService'
+
 const initialState = []
 
 const noteReducer = (state = initialState, action) => {
@@ -20,14 +22,13 @@ const noteReducer = (state = initialState, action) => {
   }
 }
 
-const generateId = () => {
-  return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
-}
-
-export const createNote = (data) => {
-  return {
-    type: 'NEW_NOTE',
-    data
+export const createNote = (content) => {
+  return async (dispatch) => {
+    const savedNote = await notesService.createNew(content)
+    dispatch({
+      type: 'NEW_NOTE',
+      data: savedNote
+    })
   }
 }
 
@@ -38,10 +39,13 @@ export const toggleImportanceOf = (id) => {
   }
 }
 
-export const initializeNotes = (notes) => {
-  return {
-    type: 'INIT_NOTES',
-    data: notes
+export const initializeNotes = () => {
+  return async (dispatch) => {
+    const notes = await notesService.getAll()
+    dispatch({
+      type: 'INIT_NOTES',
+      data: notes
+    })
   }
 }
 
