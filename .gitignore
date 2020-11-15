@@ -6,3 +6,4 @@ misc/.DS_Store
 **/.env.swp
 misc/notes/.eslintrc.js
 misc/notes/.eslintignore
+part6/redux-anecdotes/db.json
