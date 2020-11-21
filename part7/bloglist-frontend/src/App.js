@@ -6,19 +6,18 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { initializeBlogs, createBlog, likeBlog, deleteBlog } from './reducers/blogsReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const notification = useSelector(state => state.notification)
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(state => state.blogs)
   const [user, setUser] = useState(null)
 
   const createBlogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    dispatch(initializeBlogs()) 
   }, [])
 
   useEffect(() => {
@@ -48,29 +47,17 @@ const App = () => {
     setUser(null)    
   }
 
-  const createBlog = async (title, author, url) => {
-    try {
-      createBlogFormRef.current.toggleIsVisible()
-      const savedBlog = await blogService.createNew({ title, author, url })
-      setBlogs(blogs.concat(savedBlog))
-    } catch (exception) {
-      console.error(exception)
-    }
-    
+  const handleCreateBlog = async (title, author, url) => {
+    createBlogFormRef.current.toggleIsVisible()
+    dispatch(createBlog({title, author, url}))
   }
 
-  const likeBlog = async (blog) => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1
-    }
-    const savedBlog = await blogService.update(blog.id, updatedBlog)
-    setBlogs(blogs.map(b => b.id === savedBlog.id ? savedBlog : b))
+  const handleLikeBlog = async (blog) => {
+    dispatch(likeBlog(blog))
   }
 
-  const removeBlog = async (blog) => {
-    await blogService.deletePost(blog.id)
-    setBlogs(blogs.filter(b => b.id !== blog.id))
+  const handleRemoveBlog = async (blog) => {
+    dispatch(deleteBlog(blog))
   }
 
   const loginForm = () => {
@@ -88,7 +75,7 @@ const App = () => {
 
         <Togglable buttonText="create blog" ref={createBlogFormRef}>
           <CreateBlogForm
-            createBlog={createBlog}
+            createBlog={handleCreateBlog}
           />
         </Togglable>
         
@@ -100,8 +87,8 @@ const App = () => {
               key={blog.id}
               createdByUser={user.username === blog.user.username}
               blog={blog}
-              likeBlog={() => likeBlog(blog)}
-              removeBlog={() => removeBlog(blog)}
+              likeBlog={() => handleLikeBlog(blog)}
+              removeBlog={() => handleRemoveBlog(blog)}
             />
         )}
       </div>

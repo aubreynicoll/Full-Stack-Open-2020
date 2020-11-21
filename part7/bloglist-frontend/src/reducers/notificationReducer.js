@@ -1,4 +1,4 @@
-const initialState = 'This is a test.'
+const initialState = null
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
