@@ -8,6 +8,7 @@ import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
+import Blog from './components/Blog'
 
 
 const App = () => {
@@ -19,15 +20,20 @@ const App = () => {
     dispatch(initializeUsers())
   }, [dispatch])
 
-  const users = useSelector(state => state.users)
-
   const padding = {
     padding: 5
   }
 
-  const match = useRouteMatch('/users/:id')
-  const user = match
-    ? users.find(user => user.id === match.params.id)
+  const users = useSelector(state => state.users)
+  const userMatch = useRouteMatch('/users/:id')
+  const user = userMatch
+    ? users.find(user => user.id === userMatch.params.id)
+    : null
+
+  const blogs = useSelector(state => state.blogs)
+  const blogMatch = useRouteMatch('/blogs/:id')
+  const blog = blogMatch
+    ? blogs.find(blog => blog.id === blogMatch.params.id)
     : null
 
   return (
@@ -46,6 +52,9 @@ const App = () => {
         </Route>
         <Route path="/users">
           <UserList />
+        </Route>
+        <Route path="/blogs/:id">
+          <Blog blog={blog} />
         </Route>
         <Route path="/">
           <BlogList />
