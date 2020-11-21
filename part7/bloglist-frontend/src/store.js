@@ -3,10 +3,12 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import notificationReducer from './reducers/notificationReducer'
 import blogsReducer from './reducers/blogsReducer'
-import userReducer from './reducers/userReducer'
+import loggedInUserReducer from './reducers/loggedInUserReducer'
+import usersReducer from './reducers/usersReducer'
 
 const reducer = combineReducers({
-  user: userReducer,
+  loggedInUser: loggedInUserReducer,
+  users: usersReducer,
   blogs: blogsReducer,
   notification: notificationReducer
 })

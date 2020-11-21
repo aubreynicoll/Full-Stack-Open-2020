@@ -1,13 +1,9 @@
 import blogsService from '../services/blogs'
 import loginService from '../services/login'
 
-const initialState = {
-  name: "anonymous",
-  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNuYWtlIiwiaWQiOiI1ZjljYjc3ZTFiNTMwMTBiNDcwNjg4NGEiLCJpYXQiOjE2MDU4NjY2MDF9.rPiHVamy1DIVQP9-voNdtQ4rr0zBEL1eVXUQrS2SSJ8",
-  username: "snake"
-}
+const initialState = null
 
-const userReducer = (state = initialState, action) => {
+const loggedInUserReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_USER':
       return action.data
@@ -54,4 +50,4 @@ export const logoutUser = () => {
   }
 }
 
-export default userReducer
+export default loggedInUserReducer
