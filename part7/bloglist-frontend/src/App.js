@@ -4,59 +4,45 @@ import Blog from './components/Blog'
 import CreateBlogForm from './components/CreateBlogForm'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
-import blogService from './services/blogs'
+import blogsService from './services/blogs'
 import loginService from './services/login'
 import { initializeBlogs, createBlog, likeBlog, deleteBlog } from './reducers/blogsReducer'
+import { loadSavedUser, loginUser, logoutUser } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const notification = useSelector(state => state.notification)
   const blogs = useSelector(state => state.blogs)
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
 
   const createBlogFormRef = useRef()
 
   useEffect(() => {
     dispatch(initializeBlogs()) 
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
-    const userJSON = window.localStorage.getItem('loggedInUser')
-    if (userJSON) {
-      const user = JSON.parse(userJSON)
-      blogService.setToken(user.token)
-      setUser(user)
-    }
-  }, [])
+    dispatch(loadSavedUser())
+  }, [dispatch])
 
-  const login = async (username, password) => {
-    try {
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem('loggedInUser', JSON.stringify(user))
-      blogService.setToken(user.token)  
-      setUser(user)
-    } catch (exception) {
-      console.error(exception)
-    }    
+  const login = (username, password) => { 
+    dispatch(loginUser({ username, password}))
   }
 
-  const handleLogout = async (event) => {
-    event.preventDefault()
-    window.localStorage.removeItem('loggedInUser')
-    blogService.setToken(null)
-    setUser(null)    
+  const handleLogout = () => {
+    dispatch(logoutUser()) 
   }
 
-  const handleCreateBlog = async (title, author, url) => {
+  const handleCreateBlog = (title, author, url) => {
     createBlogFormRef.current.toggleIsVisible()
     dispatch(createBlog({title, author, url}))
   }
 
-  const handleLikeBlog = async (blog) => {
+  const handleLikeBlog = (blog) => {
     dispatch(likeBlog(blog))
   }
 
-  const handleRemoveBlog = async (blog) => {
+  const handleRemoveBlog = (blog) => {
     dispatch(deleteBlog(blog))
   }
 
