@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogsReducer'
 import { initializeUsers } from './reducers/usersReducer'
 import { loadSavedUser } from './reducers/loggedInUserReducer'
-import { Switch, Link, Route, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
 import Blog from './components/Blog'
+import MenuBar from './components/MenuBar'
+import LoginForm from './components/LoginForm'
 
 
 const App = () => {
@@ -19,10 +21,6 @@ const App = () => {
     dispatch(initializeBlogs())
     dispatch(initializeUsers())
   }, [dispatch])
-
-  const padding = {
-    padding: 5
-  }
 
   const users = useSelector(state => state.users)
   const userMatch = useRouteMatch('/users/:id')
@@ -38,11 +36,7 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        <Link to="/" style={padding}>blogs</Link>
-        <Link to="/users" style={padding}>users</Link>
-      </div>
-
+      <MenuBar />
       <h1>Blog App</h1>
       <Notification />
       
@@ -55,6 +49,9 @@ const App = () => {
         </Route>
         <Route path="/blogs/:id">
           <Blog blog={blog} />
+        </Route>
+        <Route path="/login">
+          <LoginForm />
         </Route>
         <Route path="/">
           <BlogList />
