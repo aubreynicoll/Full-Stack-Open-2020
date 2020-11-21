@@ -6,6 +6,7 @@ import { loadSavedUser } from './reducers/loggedInUserReducer'
 import { BrowserRouter as Router, Switch, Link, Route } from 'react-router-dom'
 import Notification from './components/Notification'
 import BlogList from './components/BlogList'
+import UserList from './components/UserList'
 
 
 const App = () => {
@@ -25,12 +26,16 @@ const App = () => {
     <Router>    
       <div>
         <Link to="/" style={padding}>blogs</Link>
+        <Link to="/users" style={padding}>users</Link>
       </div>
 
       <h1>Blog App</h1>
       <Notification />
       
       <Switch>
+        <Route path="/users">
+          <UserList />
+        </Route>
         <Route path="/">
           <BlogList />
         </Route>
