@@ -1,12 +1,16 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { createBlog } from '../reducers/blogsReducer'
+import { setMessage } from '../reducers/notificationReducer'
 
 const CreateBlogForm = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
+    
     const title = event.target.title.value
     const author = event.target.author.value
     const url = event.target.url.value
@@ -15,7 +19,14 @@ const CreateBlogForm = () => {
     event.target.author.value = ''
     event.target.url.value = ''
 
-    dispatch(createBlog({ title, author, url }))    
+    try {
+      await dispatch(createBlog({ title, author, url }))
+      dispatch(setMessage(`You created '${title}'`))
+      history.push('/')
+    } catch (exception) {
+      dispatch(setMessage('Title and Url are required.'))
+    }
+    
   }
 
   return (

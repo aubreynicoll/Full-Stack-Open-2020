@@ -3,7 +3,7 @@ const initialState = null
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_MESSAGE':
-      return action.message
+      return action.data
     case 'CLEAR_MESSAGE':
       return null
     default:
@@ -19,7 +19,7 @@ export const setMessage = (message) => {
 
     dispatch({
       type: 'SET_MESSAGE',
-      message
+      data: message
     })
 
     timeoutId = setTimeout(() => {

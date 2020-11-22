@@ -2,19 +2,28 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { loginUser } from '../reducers/loggedInUserReducer'
+import { setMessage } from '../reducers/notificationReducer'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const handleSubmit = (event) => {
+  
+  const handleSubmit = async (event) => {
     event.preventDefault()
+
     const username = event.target.username.value
     const password = event.target.password.value
+
     event.target.username.value = ''
     event.target.password.value = ''
-    dispatch(loginUser({ username, password}))
-    history.push('/')
+
+    try {
+      await dispatch(loginUser({ username, password}))
+      history.push('/')
+    } catch (exception) {
+      dispatch(setMessage('Incorrect username or password'))
+    }
   }
 
   return (

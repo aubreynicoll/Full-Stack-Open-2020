@@ -28,7 +28,7 @@ blogsRouter.post('/', async (req, res) => {
     user: user._id
   })
 
-  const savedBlog = await blog.save()
+  const savedBlog = await blog.save().then(blog => blog.populate('user', { username: 1, name: 1 }).execPopulate())
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 

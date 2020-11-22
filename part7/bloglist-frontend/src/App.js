@@ -45,18 +45,23 @@ const App = () => {
         <Route path="/users/:id">
           <User user={user} />
         </Route>
+
         <Route path="/users">
           <UserList />
         </Route>
+
         <Route path="/blogs/:id">
           <Blog blog={blog} />
         </Route>
+
         <Route path="/login">
           <LoginForm />
         </Route>
+
         <Route path="/create">
           <CreateBlogForm />
         </Route>
+        
         <Route path="/">
           <BlogList />
         </Route>
