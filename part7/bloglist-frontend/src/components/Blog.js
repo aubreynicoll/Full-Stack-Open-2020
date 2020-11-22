@@ -2,13 +2,29 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { likeBlog, deleteBlog } from '../reducers/blogsReducer'
+import { likeBlog, deleteBlog, commentOnBlog } from '../reducers/blogsReducer'
 import { setMessage } from '../reducers/notificationReducer'
 
-const CommentsSection = ({ comments }) => {
+const CommentsSection = ({ comments, handleAddComment }) => {
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const comment = event.target.comment.value
+    event.target.comment.value = ''
+    handleAddComment(comment)
+  }
+
   return (
     <div>
       <h3>Comments</h3>
+
+      <form onSubmit={handleSubmit}>
+        <input 
+          type="text"
+          name="comment"  
+        />
+        <button type="submit">Add Comment</button>
+      </form>
+      
       <ul>
         {comments.map(comment => (
           <li key={comment}>{comment}</li>
@@ -38,6 +54,11 @@ const Blog = ({ blog }) => {
     history.push('/')
   }
 
+  const handleAddComment = (comment) => {
+    dispatch(commentOnBlog(blog, comment))
+    dispatch(setMessage(`You commented: '${comment}'`))
+  }
+
   if (!blog) {
     return null
   }
@@ -59,7 +80,7 @@ const Blog = ({ blog }) => {
         {createdByLoggedInUser && <button onClick={handleDelete}>Delete</button>}
       </div>
 
-      <CommentsSection comments={blog.comments} />    
+      <CommentsSection comments={blog.comments} handleAddComment={handleAddComment} />    
     </div>
   )
 }
