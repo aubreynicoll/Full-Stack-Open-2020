@@ -12,6 +12,7 @@ import Blog from './components/Blog'
 import MenuBar from './components/MenuBar'
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
+import Footer from './components/Footer'
 
 
 const App = () => {
@@ -67,6 +68,7 @@ const App = () => {
         </Route>
       </Switch>
       
+      <Footer />
     </div>
   )
 }

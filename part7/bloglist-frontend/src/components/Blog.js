@@ -5,6 +5,19 @@ import { useHistory } from 'react-router-dom'
 import { likeBlog, deleteBlog } from '../reducers/blogsReducer'
 import { setMessage } from '../reducers/notificationReducer'
 
+const CommentsSection = ({ comments }) => {
+  return (
+    <div>
+      <h3>Comments</h3>
+      <ul>
+        {comments.map(comment => (
+          <li key={comment}>{comment}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -45,6 +58,8 @@ const Blog = ({ blog }) => {
         <button onClick={handleLike}>Like</button>
         {createdByLoggedInUser && <button onClick={handleDelete}>Delete</button>}
       </div>
+
+      <CommentsSection comments={blog.comments} />    
     </div>
   )
 }

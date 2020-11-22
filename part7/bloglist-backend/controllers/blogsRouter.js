@@ -35,6 +35,19 @@ blogsRouter.post('/', async (req, res) => {
   res.status(201).json(savedBlog)
 })
 
+blogsRouter.post('/:id/comments', async (req, res) => {
+  const id = req.params.id
+  const comment = req.body.comment
+
+  const updatedBlog = await Blog.findByIdAndUpdate(id, { $push: { comments: comment } }, { new: true })
+
+  if (updatedBlog) {
+    res.status(200).json(updatedBlog)
+  } else {
+    res.status(404).end()
+  }
+})
+
 blogsRouter.delete('/:id', async (req, res) => {
   const token = req.token
   const verifiedToken = jwt.verify(token, config.SECRET)
