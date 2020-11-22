@@ -1,20 +1,21 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogsReducer'
 
-const CreateBlogForm = ({ createBlog }) => {
-  CreateBlogForm.propTypes = {
-    createBlog: PropTypes.func.isRequired
-  }
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+const CreateBlogForm = () => {
+  const dispatch = useDispatch()
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    createBlog(title, author, url)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    const title = event.target.title.value
+    const author = event.target.author.value
+    const url = event.target.url.value
+
+    event.target.title.value = ''
+    event.target.author.value = ''
+    event.target.url.value = ''
+
+    dispatch(createBlog({ title, author, url }))    
   }
 
   return (
@@ -25,27 +26,24 @@ const CreateBlogForm = ({ createBlog }) => {
           title: <br />
           <input 
             type="text"
+            name="title"
             id="title-input"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
             />
         </div>
         <div>
           author: <br />
           <input 
             type="text"
+            name="author"
             id="author-input"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
           url: <br />
           <input 
             type="text"
+            name="url"
             id="url-input"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
           />
         </div>
         <button type="submit" id="submit-blog-button">create blog</button>

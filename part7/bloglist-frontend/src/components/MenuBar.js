@@ -20,9 +20,10 @@ const MenuBar = () => {
     <div>
       <Link to="/" style={padding}>Blogs</Link>
       <Link to="/users" style={padding}>Users</Link>
+      {loggedInUser && <Link to="/create" style={padding}>Create</Link>}
       {loggedInUser
         ? <>
-            <em>{`logged in as ${loggedInUser.name}`}</em>
+            <em style={padding}>{`logged in as ${loggedInUser.name}`}</em>
             <button onClick={handleLogout}>log out</button>
           </>
         : <Link to="/login" style={padding}>Log in</Link>

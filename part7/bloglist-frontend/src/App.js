@@ -11,6 +11,7 @@ import User from './components/User'
 import Blog from './components/Blog'
 import MenuBar from './components/MenuBar'
 import LoginForm from './components/LoginForm'
+import CreateBlogForm from './components/CreateBlogForm'
 
 
 const App = () => {
@@ -52,6 +53,9 @@ const App = () => {
         </Route>
         <Route path="/login">
           <LoginForm />
+        </Route>
+        <Route path="/create">
+          <CreateBlogForm />
         </Route>
         <Route path="/">
           <BlogList />
