@@ -1,5 +1,5 @@
 import blogsService from '../services/blogs'
-import { updateUser } from './usersReducer'
+import { refreshUserById } from './usersReducer'
 
 const initialState = []
 
@@ -42,7 +42,7 @@ export const createBlog = (blog) => {
       type: 'CREATE_BLOG',
       data: savedBlog
     })
-    dispatch(updateUser(savedBlog.user.id))
+    dispatch(refreshUserById(savedBlog.user.id))
   }
 }
 
@@ -77,7 +77,7 @@ export const deleteBlog = (blog) => {
       type: 'DELETE_BLOG',
       data: blog
     })
-    dispatch(updateUser(blog.user.id))
+    dispatch(refreshUserById(blog.user.id))
   }
 }
 

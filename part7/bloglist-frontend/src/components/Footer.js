@@ -8,6 +8,7 @@ const Footer = () => {
 
   return (
     <div style={margin}>
+      <hr />
       <em>Blog App by Aubrey Nicoll, Full Stack Open 2020</em>
     </div>
   )

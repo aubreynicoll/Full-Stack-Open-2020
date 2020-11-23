@@ -27,7 +27,7 @@ export const initializeUsers = () => {
   }
 }
 
-export const updateUser = (id) => {
+export const refreshUserById = (id) => {
   return async (dispatch) => {
     const user = await usersService.getById(id)
     dispatch({

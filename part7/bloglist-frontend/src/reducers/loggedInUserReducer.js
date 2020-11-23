@@ -20,11 +20,12 @@ export const loadSavedUser = () => {
     if (userJSON) {
       const user = JSON.parse(userJSON)
       blogsService.setToken(user.token)
+
       dispatch({
         type: 'SET_USER',
         data: user
       })
-    }
+    }    
   }
 }
 
@@ -33,6 +34,7 @@ export const loginUser = (credentials) => {
     const user = await loginService.login(credentials)
     window.localStorage.setItem('loggedInUser', JSON.stringify(user))
     blogsService.setToken(user.token)
+
     dispatch({
       type: 'SET_USER',
       data: user

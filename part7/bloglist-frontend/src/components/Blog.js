@@ -37,31 +37,31 @@ const CommentsSection = ({ comments, handleAddComment }) => {
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
   const history = useHistory()
-  
-  const createdByLoggedInUser = useSelector(state => (
-    state.loggedInUser 
-      && state.loggedInUser.username === blog.user.username
-  ))
+  const currentUser = useSelector(state => state.loggedInUser)
+
+  if (!blog) {
+    return null
+  }
+
+  const createdByCurrentUser = currentUser && currentUser.username === blog.user.username
 
   const handleLike = () => {
     dispatch(likeBlog(blog))
-    dispatch(setMessage(`You liked '${blog.title}'`))
+    dispatch(setMessage(`You liked '${blog.title}'`, true))
   }
 
   const handleDelete = () => {
     dispatch(deleteBlog(blog))
-    dispatch(setMessage(`You deleted '${blog.title}'`))
+    dispatch(setMessage(`You deleted '${blog.title}'`, true))
     history.push('/')
   }
 
   const handleAddComment = (comment) => {
     dispatch(commentOnBlog(blog, comment))
-    dispatch(setMessage(`You commented: '${comment}'`))
+    dispatch(setMessage(`You commented: '${comment}'`, true))
   }
 
-  if (!blog) {
-    return null
-  }
+  
 
   return (
     <div>
@@ -77,7 +77,7 @@ const Blog = ({ blog }) => {
       </div>
       <div>
         <button onClick={handleLike}>Like</button>
-        {createdByLoggedInUser && <button onClick={handleDelete}>Delete</button>}
+        {createdByCurrentUser && <button onClick={handleDelete}>Delete</button>}
       </div>
 
       <CommentsSection comments={blog.comments} handleAddComment={handleAddComment} />    

@@ -13,6 +13,8 @@ import MenuBar from './components/MenuBar'
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
 import Footer from './components/Footer'
+import { Container } from '@material-ui/core'
+import './App.css'
 
 
 const App = () => {
@@ -27,7 +29,7 @@ const App = () => {
   const users = useSelector(state => state.users)
   const userMatch = useRouteMatch('/users/:id')
   const user = userMatch
-    ? users.find(user => user.id === userMatch.params.id)
+    ? users.find(user => user.id === userMatch.params.id) 
     : null
 
   const blogs = useSelector(state => state.blogs)
@@ -37,39 +39,39 @@ const App = () => {
     : null
 
   return (
-    <div>
-      <MenuBar />
-      <h1>Blog App</h1>
-      <Notification />
-      
-      <Switch>
-        <Route path="/users/:id">
-          <User user={user} />
-        </Route>
-
-        <Route path="/users">
-          <UserList />
-        </Route>
-
-        <Route path="/blogs/:id">
-          <Blog blog={blog} />
-        </Route>
-
-        <Route path="/login">
-          <LoginForm />
-        </Route>
-
-        <Route path="/create">
-          <CreateBlogForm />
-        </Route>
+      <Container>
+        <MenuBar />
+        <h1>Blog App</h1>
+        <Notification />
         
-        <Route path="/">
-          <BlogList />
-        </Route>
-      </Switch>
-      
-      <Footer />
-    </div>
+        <Switch>
+          <Route path="/users/:id">
+            <User user={user} />
+          </Route>
+  
+          <Route path="/users">
+            <UserList />
+          </Route>
+  
+          <Route path="/blogs/:id">
+            <Blog blog={blog} />
+          </Route>
+  
+          <Route path="/login">
+            <LoginForm />
+          </Route>
+  
+          <Route path="/create">
+            <CreateBlogForm />
+          </Route>
+          
+          <Route path="/">
+            <BlogList />
+          </Route>
+        </Switch>
+        
+        <Footer />
+      </Container>
   )
 }
 

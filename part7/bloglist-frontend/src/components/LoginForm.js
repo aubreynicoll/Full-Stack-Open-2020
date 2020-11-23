@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { loginUser } from '../reducers/loggedInUserReducer'
 import { setMessage } from '../reducers/notificationReducer'
+import { TextField, Button } from '@material-ui/core'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-
   
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -19,10 +19,11 @@ const LoginForm = () => {
     event.target.password.value = ''
 
     try {
-      await dispatch(loginUser({ username, password}))
+      await dispatch(loginUser({ username, password }))
+      dispatch(setMessage('Login successful!', true))
       history.push('/')
-    } catch (exception) {
-      dispatch(setMessage('Incorrect username or password'))
+    } catch (e) {
+      dispatch(setMessage('Incorrect username or password.', false))
     }
   }
 
@@ -30,23 +31,13 @@ const LoginForm = () => {
     <div>
       <h2>please log in:</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          username: <br />
-          <input 
-            type="text"
-            name="username"
-            id="username-input"
-          />
+        <div>          
+          <TextField label="username" name="username" />
         </div>
         <div>
-          password: <br />
-          <input 
-            type="password"
-            name="password"
-            id="password-input"
-          />
+          <TextField label="password" name="password" type="password" />
         </div>
-        <button type="submit" id="submit-login-button">log in</button>
+        <Button type="submit" variant="contained" color="primary">log in</Button>
       </form>
     </div>
   )

@@ -1,3 +1,4 @@
+import { Button, TextField } from '@material-ui/core'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -21,12 +22,11 @@ const CreateBlogForm = () => {
 
     try {
       await dispatch(createBlog({ title, author, url }))
-      dispatch(setMessage(`You created '${title}'`))
+      dispatch(setMessage(`You created '${title}'`, true))
       history.push('/')
-    } catch (exception) {
-      dispatch(setMessage('Title and Url are required.'))
+    } catch (e) {
+      dispatch(setMessage('Title and Url are required.', false))
     }
-    
   }
 
   return (
@@ -34,30 +34,15 @@ const CreateBlogForm = () => {
       <h2>create new</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          title: <br />
-          <input 
-            type="text"
-            name="title"
-            id="title-input"
-            />
+          <TextField label="title" name="title" />
         </div>
         <div>
-          author: <br />
-          <input 
-            type="text"
-            name="author"
-            id="author-input"
-          />
+          <TextField label="author" name="author" />
         </div>
         <div>
-          url: <br />
-          <input 
-            type="text"
-            name="url"
-            id="url-input"
-          />
+          <TextField label="url" name="url" />
         </div>
-        <button type="submit" id="submit-blog-button">create blog</button>
+        <Button type="submit" variant="contained" color="primary">create blog</Button>
       </form>
     </div>
   )
