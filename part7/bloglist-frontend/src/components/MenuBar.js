@@ -30,7 +30,8 @@ const MenuBar = () => {
           Users
         </Button>
 
-        {currentUser && <Button color="inherit" component={Link} to="/create">
+        {currentUser && 
+          <Button color="inherit" component={Link} to="/create">
             Create
           </Button>
         }
