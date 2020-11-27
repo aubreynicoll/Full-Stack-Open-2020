@@ -5,7 +5,9 @@ import { ALL_AUTHORS } from '../queries/index'
 
 const Authors = (props) => {
   const [authors, setAuthors] = useState([])
-  const result = useQuery(ALL_AUTHORS)
+  const result = useQuery(ALL_AUTHORS, {
+    pollInterval: 2000
+  })
 
   useEffect(() => {
     if (result.data) {
