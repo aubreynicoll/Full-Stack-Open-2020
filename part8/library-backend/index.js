@@ -89,7 +89,7 @@ const resolvers = {
       if (args.author && args.genre) {
         const author = await Author.findOne({ name: args.author })
         if (author) {
-          return Book.find({ author: author._id, genres: { $in: args.genre } })
+          return Book.find({ author: author._id, genres: { $in: args.genre } }).populate('author')
         } else {
           return []
         }
@@ -98,14 +98,14 @@ const resolvers = {
       if (args.author) {
         const author = await Author.findOne({ name: args.author })
         if (author) {
-          return Book.find({ author: author._id })
+          return Book.find({ author: author._id }).populate('author')
         } else {
           return []
         }
       }
 
       if (args.genre) {
-        return Book.find({ genres: { $in: args.genre } })
+        return Book.find({ genres: { $in: args.genre } }).populate('author')
       }
 
       return Book.find({}).populate('author')
