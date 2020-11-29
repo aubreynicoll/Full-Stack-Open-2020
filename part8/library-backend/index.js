@@ -1,9 +1,10 @@
-const { ApolloServer, gql } = require('apollo-server')
-const { v1: uuid } = require('uuid')
+const { ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server')
 const mongoose = require('mongoose')
 const config = require('./utils/config')
 const Book = require('./models/Book')
 const Author = require('./models/Author')
+const User = require('./models/User')
+const jwt = require('jsonwebtoken')
 
 console.log(`Connecting to ${config.MONGO_DB_URI}...`)
 mongoose.connect(config.MONGO_DB_URI, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false, useUnifiedTopology: true })
@@ -15,6 +16,16 @@ mongoose.connect(config.MONGO_DB_URI, { useNewUrlParser: true, useCreateIndex: t
   })
 
 const typeDefs = gql`
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Author {
     name: String!
     id: ID!
@@ -41,6 +52,8 @@ const typeDefs = gql`
     ): [Book!]
 
     allAuthors: [Author!]!
+
+    me: User
   }
 
   type Mutation {
@@ -49,12 +62,22 @@ const typeDefs = gql`
       published: Int!
       author: String!
       genres: [String!]!
-    ): Book!
+    ): Book
     
     editAuthor(
       name: String!
       setBorn: Int!
     ): Author
+
+    createUser(
+      username: String!
+      favoriteGenre: String!
+    ): User
+
+    logIn(
+      username: String!
+      password: String!
+    ): Token
   }
 `
 
@@ -93,27 +116,81 @@ const resolvers = {
     bookCount: (root) => Book.find({ author: root.id }).countDocuments()
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new AuthenticationError('You must be logged in to add a book.')
+      }
       let author = await Author.findOne({ name: args.author })
 
       if (!author) {
         author = new Author({ name: args.author })
-        await author.save()
+        try {
+          await author.save()
+        } catch (error) {
+          throw new UserInputError(error.message, { invalidArgs: args })
+        }
       }
 
       const book = new Book({ ...args, author })
-      return book.save()
+      try {
+        await book.save()
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args })
+      }
+
+      return book
     },
 
-    editAuthor: async (root, args) => {
-      return Author.findOneAndUpdate({ name: args.name }, { born: args.setBorn }, { new: true })
+    editAuthor: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new AuthenticationError('You must be logged in to edit an author.')
+      }
+      let author
+      try {
+        author = await Author.findOneAndUpdate({ name: args.name }, { born: args.setBorn }, { new: true })
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args })
+      }
+      return author
+    },
+
+    createUser: async (root, args) => {
+      const user = new User({ ...args })
+      try {
+        user.save()
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args })
+      }
+      return user
+    },
+
+    logIn: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+
+      if (!user || args.password !== '1234') {
+        throw new UserInputError('Incorrect username or password', { invalidArgs: args })
+      }
+      const unsignedToken = {
+        username: user.username,
+        id: user._id
+      }
+      const token = { value: jwt.sign(unsignedToken, config.JWT_SECRET) }
+      return token
     }
   }
 }
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: ({ req }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.toLowerCase().startsWith('bearer ')) {
+      const tokenData = jwt.verify(auth.substring(7), config.JWT_SECRET)
+      const currentUser = User.findById(tokenData.id)
+      return { currentUser }
+    }
+  }
 })
 
 server
