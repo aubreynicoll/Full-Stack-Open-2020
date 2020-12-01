@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { UPDATE_AUTHOR } from '../queries/index'
+import { ALL_AUTHORS, UPDATE_AUTHOR } from '../queries/index'
 import { useMutation } from '@apollo/client'
 import Select from 'react-select'
 
@@ -7,7 +7,9 @@ const AuthorBornForm = ({ authors }) => {
   const [name, setName] = useState(null)
   const [born, setBorn] = useState('')
 
-  const [updateAuthor] = useMutation(UPDATE_AUTHOR)
+  const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
+    refetchQueries: [ { query: ALL_AUTHORS } ]
+  })
   const options = authors.map(a => ({ value: a.name, label: a.name }))
 
   const onSubmit = (event) => {

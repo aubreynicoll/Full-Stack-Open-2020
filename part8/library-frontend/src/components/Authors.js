@@ -14,10 +14,18 @@ const Authors = (props) => {
     if (result.data) {
       setAuthors(result.data.allAuthors)
     }
-  }, [result])
+  }, [result.data])
 
   if (!props.show) {
     return null
+  }
+
+  if (result.loading) {
+    return (
+      <div>
+        loading...
+      </div>
+    )
   }
 
   return (
@@ -26,7 +34,9 @@ const Authors = (props) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>
+              name
+            </th>
             <th>
               born
             </th>

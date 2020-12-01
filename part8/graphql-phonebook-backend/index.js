@@ -71,7 +71,7 @@ const typeDefs = gql`
       username: String!
     ): User
 
-    logIn(
+    login(
       username: String!
       password: String!
     ): Token
@@ -152,8 +152,8 @@ const resolvers = {
       return user
     },
 
-    logIn: async (root, args) => {
-      const user = await Person.findOne({ username: args.username })
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
 
       if (!user || args.password !== '1234') {
         throw new UserInputError('wrong creds, chummer.')

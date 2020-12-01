@@ -74,7 +74,7 @@ const typeDefs = gql`
       favoriteGenre: String!
     ): User
 
-    logIn(
+    login(
       username: String!
       password: String!
     ): Token
@@ -169,7 +169,7 @@ const resolvers = {
       return user
     },
 
-    logIn: async (root, args) => {
+    login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
 
       if (!user || args.password !== '1234') {

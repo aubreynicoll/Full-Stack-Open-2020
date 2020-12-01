@@ -10,7 +10,7 @@ const Persons = ({ persons }) => {
     if (result.data) {
       setPerson(result.data.findPerson)
     }
-  }, [result])
+  }, [result.data])
 
   const showPerson = (name) => {
     getPerson({ variables: { nameToSearch: name } })
