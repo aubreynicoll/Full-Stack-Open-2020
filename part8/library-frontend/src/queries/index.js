@@ -19,6 +19,7 @@ export const ALL_BOOKS = gql`
         name
       }
       published
+      genres
       id
     }
   }
@@ -38,7 +39,9 @@ export const ADD_BOOK = gql`
       genres: $genres
     ) {
       title
-      author
+      author {
+        name
+      }
       published
       genres
       id

@@ -4,10 +4,12 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
+import Notification from './components/Notification'
 import { useApolloClient } from '@apollo/client'
 
 const App = () => {
   const [page, setPage] = useState('authors')
+  const [errorMessage, setErrorMessage] = useState(null)
   const [token, setToken] = useState(null)
 
   const client = useApolloClient()
@@ -18,6 +20,13 @@ const App = () => {
       setToken(token)
     }
   }, [])
+
+  const notify = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
 
   const logout = () => {
     localStorage.removeItem('currentUserToken')
@@ -34,6 +43,9 @@ const App = () => {
         {token && <button onClick={logout}>log out</button>}
         {!token && <button onClick={() => setPage('login')}>log in</button>}
       </div>
+      <div>
+        <Notification errorMessage={errorMessage} />
+      </div>
 
       <Authors
         show={page === 'authors'}
@@ -45,11 +57,13 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
+        notify={notify}
       />
 
       <LoginForm
         show={page === 'login'}
         setToken={setToken}
+        notify={notify}
         pushHome={() => setPage('authors')}
       />
 
