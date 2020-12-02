@@ -6,7 +6,11 @@ const LoginForm = (props) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const [login, result] = useMutation(LOGIN)
+  const [login, result] = useMutation(LOGIN, {
+    onError: (error) => {
+      props.notify(error.graphQLErrors[0].message)
+    }
+  })
 
   useEffect(() => {
     if (result.data) {
@@ -21,6 +25,8 @@ const LoginForm = (props) => {
   const onSubmit = (event) => {
     event.preventDefault()
     login({ variables: { username, password }})
+    setUsername('')
+    setPassword('')
   }
 
   if (!props.show) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries/index'
 
 const Books = (props) => {
@@ -7,25 +7,32 @@ const Books = (props) => {
   const [genres, setGenres] = useState([])
   const [filter, setFilter] = useState(null)
 
-  const result = useQuery(ALL_BOOKS, {
-    pollInterval: 2000
-  })
+  const result = useQuery(ALL_BOOKS)
+  const [getFilteredBooks, filteredBooksResponse] = useLazyQuery(ALL_BOOKS)
 
   useEffect(() => {
     if (result.data) {
       setBooks(result.data.allBooks)
+      setGenres([ ...new Set(result.data.allBooks.flatMap(b => b.genres)) ])
     }
   }, [result.data])
 
   useEffect(() => {
-    setGenres([ ...new Set(books.flatMap(b => b.genres)) ])
-  }, [books])
+    getFilteredBooks({ variables: { genre: filter } })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter])
+
+  useEffect(() => {
+    if (filteredBooksResponse.data) {
+      setBooks(filteredBooksResponse.data.allBooks)
+    }
+  }, [filteredBooksResponse.data])
   
   if (!props.show) {
     return null
   }
 
-  if (result.loading) {
+  if (result.loading || filteredBooksResponse.loading) {
     return (
       <div>
         loading...
@@ -53,7 +60,6 @@ const Books = (props) => {
             </th>
           </tr>
           {books
-            .filter(b => filter ? b.genres.includes(filter) : true)
             .map(b =>
             <tr key={b.title}>
               <td>{b.title}</td>

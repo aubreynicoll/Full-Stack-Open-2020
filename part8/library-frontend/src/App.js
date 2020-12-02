@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
 import Notification from './components/Notification'
 import { useApolloClient } from '@apollo/client'
+import Recommendations from './components/Recommendations'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -32,6 +33,7 @@ const App = () => {
     localStorage.removeItem('currentUserToken')
     setToken(null)
     client.resetStore()
+    setPage('authors')
   }
 
   return (
@@ -39,6 +41,7 @@ const App = () => {
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
+        {token && <button onClick={() => setPage('recommendations')}>recommendations</button>}
         {token && <button onClick={() => setPage('add')}>add book</button>}
         {token && <button onClick={logout}>log out</button>}
         {!token && <button onClick={() => setPage('login')}>log in</button>}
@@ -49,15 +52,17 @@ const App = () => {
 
       <Authors
         show={page === 'authors'}
+        notify={notify}
       />
 
       <Books
-        show={page === 'books'}
+        show={page === 'books'}        
       />
 
       <NewBook
         show={page === 'add'}
         notify={notify}
+        pushBooksView={() => setPage('books')}
       />
 
       <LoginForm
@@ -65,6 +70,10 @@ const App = () => {
         setToken={setToken}
         notify={notify}
         pushHome={() => setPage('authors')}
+      />
+
+      <Recommendations
+        show={page ==='recommendations'}
       />
 
     </div>

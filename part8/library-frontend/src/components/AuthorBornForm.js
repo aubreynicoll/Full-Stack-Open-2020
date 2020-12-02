@@ -3,12 +3,24 @@ import { ALL_AUTHORS, UPDATE_AUTHOR } from '../queries/index'
 import { useMutation } from '@apollo/client'
 import Select from 'react-select'
 
-const AuthorBornForm = ({ authors }) => {
+const AuthorBornForm = ({ authors, notify }) => {
   const [name, setName] = useState(null)
   const [born, setBorn] = useState('')
 
   const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
-    refetchQueries: [ { query: ALL_AUTHORS } ]
+    update: (store, response) => {
+      const authorsInStore = store.readQuery({ query: ALL_AUTHORS })
+      store.writeQuery({
+        query: ALL_AUTHORS,
+        data: {
+          ...authorsInStore,
+          allAuthors: authorsInStore.allAuthors.map(a => a.id === response.data.editAuthor.id ? response.data.editAuthor : a)
+        }
+      })
+    },
+    onError: (error) => {
+      notify(error.graphQLErrors[0].message)
+    }
   })
   const options = authors.map(a => ({ value: a.name, label: a.name }))
 
@@ -22,7 +34,9 @@ const AuthorBornForm = ({ authors }) => {
       }
     })
 
-    setName('')
+    notify(`Set ${name}'s birthdate to ${born}`)
+
+    setName(null)
     setBorn('')
   }
 
@@ -39,7 +53,7 @@ const AuthorBornForm = ({ authors }) => {
         </div>
         <div>
           born: <br />
-          <input value={born}
+          <input type="number" value={born}
             onChange={({ target }) => setBorn(target.value)}
           />
         </div>

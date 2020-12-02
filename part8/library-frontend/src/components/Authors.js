@@ -6,9 +6,7 @@ import AuthorBornForm from './AuthorBornForm'
 
 const Authors = (props) => {
   const [authors, setAuthors] = useState([])
-  const result = useQuery(ALL_AUTHORS, {
-    pollInterval: 2000
-  })
+  const result = useQuery(ALL_AUTHORS)
 
   useEffect(() => {
     if (result.data) {
@@ -54,7 +52,7 @@ const Authors = (props) => {
         </tbody>
       </table>
 
-      <AuthorBornForm authors={authors} />
+      <AuthorBornForm authors={authors} notify={props.notify} />
     </div>
   )
 }

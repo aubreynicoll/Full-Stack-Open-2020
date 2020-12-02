@@ -10,26 +10,45 @@ const NewBook = (props) => {
   const [genres, setGenres] = useState([])
 
   const [addBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [
-      { query: ALL_AUTHORS }, 
-      { query: ALL_BOOKS }
-    ]
+    update: (store, response) => {
+      const booksInStore = store.readQuery({ query: ALL_BOOKS })
+      const authorsInStore = store.readQuery({ query: ALL_AUTHORS })
+      store.writeQuery({
+        query: ALL_BOOKS,
+        data: {
+          ...booksInStore,
+          allBooks: [...booksInStore.allBooks, response.data.addBook]
+        }
+      })
+      store.writeQuery({
+        query: ALL_AUTHORS,
+        data: {
+          ...authorsInStore,
+          allAuthors: [...authorsInStore.allAuthors, response.data.addBook.author]
+        }
+      })
+    },
+    onError: (error) => {
+      props.notify(error.graphQLErrors[0].message)
+    }
   })
 
   if (!props.show) {
     return null
   }
 
-  const submit = async (event) => {
+  const submit = (event) => {
     event.preventDefault()
     
     addBook({ variables: { title, author, published: Number(published), genres } })
+    props.notify(`Added ${title}, by ${author}`)
 
     setTitle('')
     setPublished('')
     setAuthor('')
     setGenres([])
     setGenre('')
+    props.pushBooksView()
   }
 
   const addGenre = () => {
@@ -39,6 +58,7 @@ const NewBook = (props) => {
 
   return (
     <div>
+      <h2>add new book</h2>
       <form onSubmit={submit}>
         <div>
           title
