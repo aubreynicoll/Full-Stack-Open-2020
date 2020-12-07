@@ -18,6 +18,11 @@ const typeDefs = gql`
       published: Int!
       genres: [String!]!
     ): AddBookResponse!
+
+    editAuthor(
+      name: String!
+      setBorn: Int!
+    ): EditAuthorResponse!
   }
 
   type Book {
@@ -39,6 +44,12 @@ const typeDefs = gql`
     success: Boolean!
     message: String
     book: Book
+  }
+
+  type EditAuthorResponse {
+    success: Boolean!
+    message: String
+    author: Author
   }
 `
 

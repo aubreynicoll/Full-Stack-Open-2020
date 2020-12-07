@@ -54,6 +54,19 @@ class AuthorAPI extends DataSource {
     this.authors = [...this.authors, newAuthor]
     return newAuthor
   }
+
+  updateAuthorBorn ({ authorData }) {
+    const existingAuthor = this.authors.find(a => a.name === authorData.name)
+
+    if (!existingAuthor) return null
+
+    const updatedAuthor = {
+      ...existingAuthor,
+      born: authorData.setBorn
+    }
+    this.authors = this.authors.map(a => a.id === updatedAuthor.id ? updatedAuthor : a)
+    return updatedAuthor
+  }
 }
 
 module.exports = AuthorAPI

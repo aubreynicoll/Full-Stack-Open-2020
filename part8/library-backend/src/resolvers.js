@@ -36,8 +36,8 @@ const resolvers = {
       const author = dataSources.authorAPI.createNewAuthor({ authorData: { name: args.author } })
       const book = dataSources.bookAPI.createNewBook({ bookData: { ...args } })
 
-      const success = dataSources.authorAPI.getAllAuthors().some(a => a.id === author.id) &&
-        dataSources.bookAPI.getAllBooks().some(b => b.id === book.id)
+      const success = dataSources.authorAPI.getAllAuthors().some(a => a.name === args.author) &&
+        dataSources.bookAPI.getAllBooks().some(b => b.title === args.title)
       
       const message = success
         ? `${book.title} was created successfully!`
@@ -47,6 +47,23 @@ const resolvers = {
         success,
         message,
         book: success ? book : null
+      }
+    },
+
+    editAuthor: (root, args, { dataSources }) => {
+      const updatedAuthor = dataSources.authorAPI.updateAuthorBorn({ authorData: { ...args } })
+
+      const success = updatedAuthor &&
+        dataSources.authorAPI.getAllAuthors().some(a => a.name === args.name && a.born === args.setBorn)
+
+      const message = success
+        ? `${updatedAuthor.name}'s birth year set to ${updatedAuthor.born}`
+        : 'update author failed'
+
+      return {
+        success,
+        message,
+        author: success ? updatedAuthor : null
       }
     }
   },
