@@ -5,10 +5,15 @@ const resolvers = require('./resolvers')
 const BookAPI = require('./datasources/BookAPI')
 const AuthorAPI = require('./datasources/AuthorAPI')
 
-const dataSources = () => ({
-  bookAPI: new BookAPI(),
-  authorAPI: new AuthorAPI()
-})
+const bookAPI = new BookAPI()
+const authorAPI = new AuthorAPI()
+
+const dataSources = () => {
+  return {
+    bookAPI,
+    authorAPI
+  }
+}
 
 const server = new ApolloServer({
   typeDefs,

@@ -1,6 +1,7 @@
 const { DataSource } = require('apollo-datasource')
+const { v1: uuid } = require('uuid')
 
-const books = [
+let books = [
   {
     title: 'Clean Code',
     published: 2008,
@@ -64,6 +65,15 @@ class BookAPI extends DataSource {
 
   getAllBooks() {
     return this.books
+  }
+
+  createNewBook({ bookData }) {
+    const newBook = {
+      ...bookData,
+      id: uuid()
+    }
+    this.books = [...this.books, newBook]
+    return newBook
   }
 }
 

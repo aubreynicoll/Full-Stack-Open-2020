@@ -1,6 +1,7 @@
 const { DataSource } = require('apollo-datasource')
+const { v1: uuid } = require('uuid')
 
-const authors = [
+let authors = [
   {
     name: 'Robert Martin',
     id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
@@ -38,6 +39,20 @@ class AuthorAPI extends DataSource {
 
   getAllAuthors() {
     return this.authors
+  }
+
+  createNewAuthor({ authorData }) {
+    const existingAuthor = this.authors.find(a => a.name === authorData.name)
+    
+    if (existingAuthor) return existingAuthor
+
+    const newAuthor = {
+      ...authorData,
+      born: null,
+      id: uuid()
+    }
+    this.authors = [...this.authors, newAuthor]
+    return newAuthor
   }
 }
 
