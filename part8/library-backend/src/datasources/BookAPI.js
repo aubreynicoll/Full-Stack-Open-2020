@@ -61,6 +61,10 @@ class BookAPI extends DataSource {
   countDocuments() {
     return this.books.length
   }
+
+  getAllBooks() {
+    return this.books
+  }
 }
 
 module.exports = BookAPI
