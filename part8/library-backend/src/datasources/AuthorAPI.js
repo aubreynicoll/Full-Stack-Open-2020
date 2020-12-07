@@ -35,6 +35,10 @@ class AuthorAPI extends DataSource {
   countDocuments() {
     return this.authors.length
   }
+
+  getAllAuthors() {
+    return this.authors
+  }
 }
 
 module.exports = AuthorAPI
