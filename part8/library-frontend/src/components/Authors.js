@@ -8,8 +8,6 @@ const Authors = (props) => {
   if (loading) return (<div>loading...</div>)
   if (error || !data) return (<div>ERROR</div>)
 
-  console.log(data)
-
   return (
     <div>
       <h2>authors</h2>
