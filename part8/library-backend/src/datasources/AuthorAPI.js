@@ -44,7 +44,7 @@ class AuthorAPI extends DataSource {
   createNewAuthor({ authorData }) {
     const existingAuthor = this.authors.find(a => a.name === authorData.name)
     
-    if (existingAuthor) return existingAuthor
+    if (existingAuthor) return null
 
     const newAuthor = {
       ...authorData,

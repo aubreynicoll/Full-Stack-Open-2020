@@ -40,13 +40,19 @@ const typeDefs = gql`
     bookCount: Int!
   }
 
-  type AddBookResponse {
+  interface Response {
+    success: Boolean!
+    message: String
+  }
+
+  type AddBookResponse implements Response {
     success: Boolean!
     message: String
     book: Book
+    author: Author
   }
 
-  type EditAuthorResponse {
+  type EditAuthorResponse implements Response {
     success: Boolean!
     message: String
     author: Author

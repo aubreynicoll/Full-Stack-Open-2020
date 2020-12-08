@@ -46,7 +46,8 @@ const resolvers = {
       return {
         success,
         message,
-        book: success ? book : null
+        book: success ? book : null,
+        author: success ? author : null
       }
     },
 

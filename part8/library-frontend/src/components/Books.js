@@ -1,6 +1,6 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
-import { FETCH_ALL_BOOKS } from '../queries'
+import { FETCH_ALL_BOOKS } from '../graphql/queries'
 
 const Books = (props) => {
   const { loading, error, data } = useQuery(FETCH_ALL_BOOKS)
