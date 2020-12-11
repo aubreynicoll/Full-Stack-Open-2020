@@ -1,11 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import { ApolloClient, ApolloProvider } from '@apollo/client'
-import cache from './cache'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 
 const client = new ApolloClient({
-  cache,
+  cache: new InMemoryCache(),
   uri: 'http://localhost:4000/'
 })
 

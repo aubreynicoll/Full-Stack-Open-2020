@@ -18,10 +18,3 @@ export const BOOK_DATA = gql`
     id
   }
 `
-
-export const RESPONSE_DATA = gql`
-  fragment ResponseData on Response {
-    success
-    message
-  }
-`

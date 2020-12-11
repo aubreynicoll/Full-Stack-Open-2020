@@ -1,10 +1,15 @@
+  
 import React from 'react'
 import { useQuery } from '@apollo/client'
 import { FETCH_ALL_AUTHORS } from '../graphql/queries'
-import AuthorBornForm from './AuthorBornForm'
+import UpdateAuthorBornForm from './UpdateAuthorBornForm'
 
 const Authors = (props) => {
   const { loading, error, data } = useQuery(FETCH_ALL_AUTHORS)
+
+  if (!props.show) {
+    return null
+  }
 
   if (loading) return (<div>loading...</div>)
   if (error || !data) return (<div>ERROR</div>)
@@ -33,7 +38,7 @@ const Authors = (props) => {
         </tbody>
       </table>
 
-      <AuthorBornForm allAuthors={data.allAuthors} />
+      <UpdateAuthorBornForm allAuthors={data.allAuthors} />
     </div>
   )
 }

@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client'
-import {
-  AUTHOR_DATA,
-  BOOK_DATA} from './fragments'
+import { AUTHOR_DATA, BOOK_DATA } from './fragments'
 
 export const FETCH_ALL_AUTHORS = gql`
   query FetchAllAuthors {

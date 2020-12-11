@@ -1,42 +1,27 @@
-import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { ADD_NEW_BOOK } from '../graphql/mutations'
+import React, { useState } from 'react'
+import { ADD_BOOK } from '../graphql/mutations'
 import { FETCH_ALL_AUTHORS, FETCH_ALL_BOOKS } from '../graphql/queries'
 
 const NewBook = (props) => {
-  const [addNewBook] = useMutation(ADD_NEW_BOOK, {
-    update: (cache, { data: { addBook } }) => {
-      if (addBook.success && addBook.author) {
-        const authorsInCache = cache.readQuery({ query: FETCH_ALL_AUTHORS })
-        authorsInCache && cache.writeQuery({
-          query: FETCH_ALL_AUTHORS,
-          data: {
-            allAuthors: authorsInCache.allAuthors.concat(addBook.author)
-          }
-        })
-      }
-      if (addBook.success && addBook.book) {
-        const booksInCache = cache.readQuery({ query: FETCH_ALL_BOOKS })
-        booksInCache && cache.writeQuery({
-          query: FETCH_ALL_BOOKS,
-          data: {
-            allBooks: booksInCache.allBooks.concat(addBook.book)
-          }
-        })
-      }
-    }
-  })
-
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
+  const [addBook] = useMutation(ADD_BOOK, {
+    refetchQueries: [{ query: FETCH_ALL_AUTHORS }, { query: FETCH_ALL_BOOKS }]
+  })
+
+  if (!props.show) {
+    return null
+  }
+
   const submit = async (event) => {
     event.preventDefault()
     
-    addNewBook({
+    addBook({
       variables: {
         title,
         author,

@@ -5,6 +5,10 @@ import { FETCH_ALL_BOOKS } from '../graphql/queries'
 const Books = (props) => {
   const { loading, error, data } = useQuery(FETCH_ALL_BOOKS)
 
+  if (!props.show) {
+    return null
+  }
+  
   if (loading) return (<div>loading...</div>)
   if (error || !data) return (<div>ERROR</div>)
 

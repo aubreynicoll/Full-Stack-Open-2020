@@ -1,44 +1,28 @@
 import { gql } from '@apollo/client'
-import {
-  RESPONSE_DATA,
-  BOOK_DATA,
-  AUTHOR_DATA
-} from './fragments'
+import { AUTHOR_DATA, BOOK_DATA } from './fragments'
 
-export const ADD_NEW_BOOK = gql`
-  mutation AddNewBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
+export const ADD_BOOK = gql`
+  mutation AddBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
     addBook(
       title: $title
       author: $author
       published: $published
       genres: $genres
     ) {
-      ...ResponseData
-      book {
-        ...BookData
-      }
-      author {
-        ...AuthorData
-      }
+      ...BookData
     }
   }
-  ${RESPONSE_DATA}
   ${BOOK_DATA}
-  ${AUTHOR_DATA}
 `
 
-export const UPDATE_AUTHOR_BORN = gql`
-  mutation UpdateAuthorBorn ($name: String!, $setBorn: Int!) {
+export const EDIT_AUTHOR = gql`
+  mutation EditAuthor($name: String!, $setBorn: Int!) {
     editAuthor(
       name: $name
       setBorn: $setBorn
     ) {
-      ...ResponseData
-      author {
-        ...AuthorData
-      }
+      ...AuthorData
     }
   }
-  ${RESPONSE_DATA}
   ${AUTHOR_DATA}
 `

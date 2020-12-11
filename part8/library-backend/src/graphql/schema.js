@@ -17,45 +17,27 @@ const typeDefs = gql`
       author: String!
       published: Int!
       genres: [String!]!
-    ): AddBookResponse!
+    ): Book
 
     editAuthor(
       name: String!
       setBorn: Int!
-    ): EditAuthorResponse!
+    ): Author
   }
 
   type Book {
+    id: ID!
     title: String!
     author: String!
     published: Int!
     genres: [String!]!
-    id: ID!
   }
 
   type Author {
+    id: ID!
     name: String!
     born: Int
-    id: ID!
     bookCount: Int!
-  }
-
-  interface Response {
-    success: Boolean!
-    message: String
-  }
-
-  type AddBookResponse implements Response {
-    success: Boolean!
-    message: String
-    book: Book
-    author: Author
-  }
-
-  type EditAuthorResponse implements Response {
-    success: Boolean!
-    message: String
-    author: Author
   }
 `
 
