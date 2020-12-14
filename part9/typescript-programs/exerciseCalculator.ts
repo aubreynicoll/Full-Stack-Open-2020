@@ -16,7 +16,7 @@ interface ExerciseArgs {
 }
 
 const parseExerciseArguments = (args: Array<string>): ExerciseArgs => {
-  if (args.length < 4) throw new Error('Too few arguments.')
+  // if (args.length < 4) throw new Error('Too few arguments.')
 
   const userArgs: Array<string> = args.slice(2)
 

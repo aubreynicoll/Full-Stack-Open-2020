@@ -1,11 +1,10 @@
 type Bmi = 'Underweight' | 'Normal weight' | 'Overweight' | 'Obese';
-
 interface BmiArgs {
   cm: number,
   kg: number
  }
 
-const parseArguments = (args: Array<string>): BmiArgs => {
+export const parseArguments = (args: Array<string>): BmiArgs => {
   if (args.length > 4) throw new Error('Too many arguments.');
   if (args.length < 4) throw new Error('Too few arguments.');
 
@@ -19,7 +18,7 @@ const parseArguments = (args: Array<string>): BmiArgs => {
   }
 }
 
-const bmiCalculator = (cm: number, kg: number): Bmi => {
+export const bmiCalculator = (cm: number, kg: number): Bmi => {
   const bmi: number = kg / Math.pow(cm / 100, 2);
 
   if (bmi <= 18.5) return 'Underweight'
@@ -27,6 +26,7 @@ const bmiCalculator = (cm: number, kg: number): Bmi => {
   else if (bmi <= 30) return 'Overweight'
   else return 'Obese'
 }
+
 
 try {
   const { cm, kg } = parseArguments(process.argv);
