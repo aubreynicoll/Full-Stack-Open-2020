@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { AUTHOR_DATA, BOOK_DATA } from './fragments'
+import { AUTHOR_DATA, BOOK_DATA, TOKEN_DATA } from './fragments'
 
 export const ADD_BOOK = gql`
   mutation AddBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
@@ -25,4 +25,16 @@ export const EDIT_AUTHOR = gql`
     }
   }
   ${AUTHOR_DATA}
+`
+
+export const LOGIN = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(
+      username: $username
+      password: $password
+    ) {
+      ...TokenData
+    }
+  }
+  ${TOKEN_DATA}
 `
