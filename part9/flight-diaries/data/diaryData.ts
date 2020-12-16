@@ -1,6 +1,7 @@
 import { DiaryEntry } from '../src/types';
+import { parseToNewDiaryEntry } from '../src/utils/parsers'
 
-const diaryData: DiaryEntry[] = [
+const data = [
   {
       "id": 1,
       "date": "2017-01-01",
@@ -30,5 +31,11 @@ const diaryData: DiaryEntry[] = [
       "comment": "I almost failed the landing but I survived"
   }
 ];
+
+const diaryData: DiaryEntry[] = data.map(obj => {
+  const object = parseToNewDiaryEntry(obj) as DiaryEntry;
+  object.id = obj.id;
+  return object;
+});
 
 export default diaryData;

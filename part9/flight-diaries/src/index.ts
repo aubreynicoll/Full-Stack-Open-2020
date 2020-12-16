@@ -9,7 +9,7 @@ app.get('/ping', (_req, res) => {
   res.send('pong');
 });
 
-app.use('/api/diary', diaryRouter);
+app.use('/api/diaries', diaryRouter);
 
 const PORT = 3001;
 app.listen(PORT, () => {
