@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc",
-    "dev": "ts-node-dev index.ts",
-    "start": "node build/index.js",
+    "tsc": "rm -rf build && tsc",
+    "dev": "ts-node-dev src/index.ts",
+    "start": "node build/src/index.js",
     "lint": "eslint --ext .ts ."
   },
   "author": "",
