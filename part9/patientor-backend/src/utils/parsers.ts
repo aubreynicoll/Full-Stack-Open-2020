@@ -22,20 +22,12 @@ const toName = (name: any): string => {
   }
 };
 
-const isString = (s: any): s is string => {
-  return typeof s === 'string' || s instanceof String;
-};
-
 const toDateString = (date: any): string => {
   if (!date || !isString(date) || !isDateString(date)) {
     throw new Error('Bad date field: ' + date);
   } else {
     return date;
   }
-};
-
-const isDateString = (d: any): d is string => {
-  return Boolean(Date.parse(d));
 };
 
 const toSsn = (ssn: any): string => {
@@ -46,11 +38,6 @@ const toSsn = (ssn: any): string => {
   }
 };
 
-const isSsnString = (s: any): s is string => {
-  const regex = RegExp('^[0-9]{6}-(?:[0-9]+){1,3}[0-9A-Za-z]$');
-  return regex.test(s);
-};
-
 const toGender = (gender: any): Gender => {
   if (!gender || !isGender(gender)) {
     throw new Error('Bad gender field: ' + gender);
@@ -59,14 +46,27 @@ const toGender = (gender: any): Gender => {
   }
 };
 
-const isGender = (g: any): g is Gender => {
-  return Object.values(Gender).includes(g);
-};
-
 const toOccupation = (occupation: any): string => {
   if (!occupation || !isString(occupation)) {
     throw new Error('Bad occupation field: ' + occupation);
   } else {
     return occupation;
   }
+};
+
+const isString = (s: any): s is string => {
+  return typeof s === 'string' || s instanceof String;
+};
+
+const isDateString = (d: any): d is string => {
+  return Boolean(Date.parse(d));
+};
+
+const isSsnString = (s: any): s is string => {
+  const regex = RegExp('^[0-9]{6}-(?:[0-9]+){1,3}[0-9A-Za-z]$');
+  return regex.test(s);
+};
+
+const isGender = (g: any): g is Gender => {
+  return Object.values(Gender).includes(g);
 };
