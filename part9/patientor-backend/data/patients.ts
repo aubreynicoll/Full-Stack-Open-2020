@@ -1,5 +1,5 @@
 import { Patient } from '../src/types';
-import { parseToNewPatient } from '../src/utils/parsers';
+import { toNewPatient } from '../src/utils/parsers';
 
 const data = [
   {
@@ -45,7 +45,7 @@ const data = [
 ];
 
 const patients: Patient[] = data.map(obj => {
-  const newPatient = parseToNewPatient(obj) as Patient;
+  const newPatient = toNewPatient(obj) as Patient;
   newPatient.id = obj.id;
   return newPatient;
 });

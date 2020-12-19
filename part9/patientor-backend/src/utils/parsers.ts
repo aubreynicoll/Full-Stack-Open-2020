@@ -2,16 +2,31 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Gender, NewPatient } from "../types";
+import { validate } from 'uuid';
 
-export const parseToNewPatient = (object: any): NewPatient => {
+export const toNewPatient = (object: any): NewPatient => {
   const newPatient = {
     name: toName(object.name),
     dateOfBirth: toDateString(object.dateOfBirth),
     ssn: toSsn(object.ssn),
     gender: toGender(object.gender),
-    occupation: toOccupation(object.occupation)
+    occupation: toOccupation(object.occupation),
+    entries: []
   };
   return newPatient;
+};
+
+export const toId = (object: any): string => {
+  const id = toIdString(object.id);
+  return id;
+};
+
+const toIdString = (id: any): string => {
+  if (!id || !isString(id) || !isIdString(id)) {
+    throw new Error('Bad id field: ' + id);
+  } else {
+    return id;
+  }
 };
 
 const toName = (name: any): string => {
@@ -54,6 +69,8 @@ const toOccupation = (occupation: any): string => {
   }
 };
 
+
+
 const isString = (s: any): s is string => {
   return typeof s === 'string' || s instanceof String;
 };
@@ -69,4 +86,8 @@ const isSsnString = (s: any): s is string => {
 
 const isGender = (g: any): g is Gender => {
   return Object.values(Gender).includes(g);
+};
+
+const isIdString = (s: any): s is string => {
+  return validate(s);
 };
