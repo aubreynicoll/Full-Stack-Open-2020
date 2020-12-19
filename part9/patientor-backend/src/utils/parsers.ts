@@ -21,6 +21,8 @@ export const toId = (object: any): string => {
   return id;
 };
 
+
+
 const toIdString = (id: any): string => {
   if (!id || !isString(id) || !isIdString(id)) {
     throw new Error('Bad id field: ' + id);
