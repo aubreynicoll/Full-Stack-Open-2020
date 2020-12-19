@@ -11,11 +11,10 @@ const PatientViewPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   useEffect((): void => {
-
     const fetchPatientById = async () => {
       let patient = patients[id];
 
-      if (!patient || !patient.ssn) {
+      if (!patient.ssn && !patient.entries) {
         try {
           patient = (await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`)).data;
         } catch (e) {
@@ -38,12 +37,16 @@ const PatientViewPage: React.FC = () => {
       <table>
         <tbody>
           <tr>
-            <td>SSN:</td>
-            <td>{patient.ssn}</td>
+            <td>Sex:</td>
+            <td>{patient.gender}</td>
           </tr>
           <tr>
             <td>DOB:</td>
             <td>{patient.dateOfBirth}</td>
+          </tr>
+          <tr>
+            <td>SSN:</td>
+            <td>{patient.ssn}</td>
           </tr>
           <tr>
             <td>Occupation:</td>
@@ -51,6 +54,16 @@ const PatientViewPage: React.FC = () => {
           </tr>
         </tbody>
       </table>
+
+      <h3>Entries</h3>
+      {patient.entries?.map(entry => (
+        <div>
+          {entry.date} - {entry.description} <br />
+          <ul>
+            {entry.diagnosisCodes?.map(code => <li>{code}</li>)}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 };
