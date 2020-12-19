@@ -1,6 +1,6 @@
 import React, {useState, useEffect } from 'react';
 import { Patient } from '../types';
-import { useStateValue } from "../state";
+import { updatePatient, useStateValue } from "../state";
 import axios from 'axios';
 import { apiBaseUrl } from '../constants';
 import { useParams } from 'react-router-dom';
@@ -21,7 +21,7 @@ const PatientViewPage: React.FC = () => {
         } catch (e) {
           console.error(e);
         }
-        dispatch({ type: "UPDATE_PATIENT", payload: patient});
+        dispatch(updatePatient(patient));
       }
 
       setPatient(patient);
