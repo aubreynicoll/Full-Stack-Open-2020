@@ -4,6 +4,7 @@ import { updatePatient, useStateValue } from "../state";
 import axios from 'axios';
 import { apiBaseUrl } from '../constants';
 import { useParams } from 'react-router-dom';
+import EntryContainer from './EntryContainer';
 
 const PatientViewPage: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
@@ -27,6 +28,7 @@ const PatientViewPage: React.FC = () => {
     };
 
     fetchPatientById();
+    // eslint-disable-next-line
   }, []);
 
   if (!patient) return null;
@@ -57,12 +59,7 @@ const PatientViewPage: React.FC = () => {
 
       <h3>Entries</h3>
       {patient.entries?.map(entry => (
-        <div>
-          {entry.date} - {entry.description} <br />
-          <ul>
-            {entry.diagnosisCodes?.map(code => <li>{code}</li>)}
-          </ul>
-        </div>
+        <EntryContainer entry={entry} />
       ))}
     </div>
   );
