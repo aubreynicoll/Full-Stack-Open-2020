@@ -1,6 +1,6 @@
 import express from 'express';
 import patientsService from '../services/patientsService';
-import { NewPatient, Entry } from '../types';
+import { NewPatient, Entry, NewEntry } from '../types';
 import { toNewPatient, toId, toNewEntry } from '../utils/parsers';
 
 const patientsRouter = express.Router();
@@ -23,8 +23,8 @@ patientsRouter.post('/', (req, res) => {
 
 patientsRouter.post('/:id/entries', (req, res) => {
   const id: string = toId(req.params);
-  const parsedData: Entry = toNewEntry(req.body);
-  const newEntry = patientsService.createNewEntry(id, parsedData);
+  const parsedData: NewEntry = toNewEntry(req.body);
+  const newEntry = patientsService.createNewEntry(id, parsedData as Entry);
   res.send(newEntry);
 });
 

@@ -35,7 +35,6 @@ const createNewPatient = (newPatient: NewPatient): PublicPatient => {
 
 const createNewEntry = (id: string, newEntry: Entry): Entry => {
   console.log('id: ', id, 'newEntry: ', newEntry);
-
   newEntry.id = uuid();
 
   patients.find(p => p.id === id)?.entries.push(newEntry);

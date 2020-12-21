@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Gender, NewPatient, EntryType, NewHealthCheckEntry, HealthCheckRating, NewOccupationalHealthcareEntry, NewHospitalEntry, Discharge, Entry } from "../types";
+import { Gender, NewPatient, EntryType, NewHealthCheckEntry, HealthCheckRating, NewOccupationalHealthcareEntry, NewHospitalEntry, Discharge, NewEntry, SickLeave, Diagnosis } from "../types";
 import { validate } from 'uuid';
 
 export const toNewPatient = (object: any): NewPatient => {
@@ -21,7 +21,7 @@ export const toId = (object: any): string => {
   return id;
 };
 
-export const toNewEntry = (object: any): Entry => {
+export const toNewEntry = (object: any): NewEntry => {
   const entryType: EntryType = toEntryType(object.type);
   let newEntry;
   switch (entryType) {
@@ -37,37 +37,36 @@ export const toNewEntry = (object: any): Entry => {
     default:
       throw new Error(`Unhandled type: ${entryType}, Object: ${JSON.stringify(object)}`);
   }
-  return newEntry as Entry;
+  return newEntry as NewEntry;
 };
 
 
 const toHealthCheckEntry = (object: any): NewHealthCheckEntry => {
   const newHealthCheckEntry = {
-    id: '',
     type: 'HealthCheck',
     description: toString(object.description),
     date: toDateString(object.date),
     specialist: toString(object.specialist),
-    healthCheckRating: toHealthCheckRating(object.healthCheckRating)
+    healthCheckRating: toHealthCheckRating(object.healthCheckRating),
+    diagnosisCodes: toDiagnosisCodes(object.diagnosisCodes)
   };
   return newHealthCheckEntry as NewHealthCheckEntry;
 };
 
 const toOccupationalHealthcareEntry = (object: any): NewOccupationalHealthcareEntry => {
   const newOccupationalHealthcareEntry = {
-    id: '',
     type: 'OccupationalHealthcare',
     description: toString(object.description),
     date: toDateString(object.date),
     specialist: toString(object.specialist),
-    employerName: toString(object.employerName)
+    employerName: toString(object.employerName),
+    sickLeave: toSickLeave(object.sickLeave)
   };
   return newOccupationalHealthcareEntry as NewOccupationalHealthcareEntry;
 };
 
 const toHospitalEntry = (object: any): NewHospitalEntry => {
   const newHospitalEntry = {
-    id: '',
     type: 'Hospital',
     description: toString(object.description),
     date: toDateString(object.date),
@@ -142,6 +141,22 @@ const toDischarge = (discharge: any): Discharge => {
   }
 };
 
+const toSickLeave = (sickLeave: any): SickLeave => {
+  if (!sickLeave || !isSickLeave(sickLeave)) {
+    throw new Error('Bad sick leave field: ' + sickLeave);
+  } else {
+    return sickLeave;
+  }
+};
+
+const toDiagnosisCodes = (diagnosisCodes: any): Array<Diagnosis['code']> => {
+  if (!diagnosisCodes || !isDiagnosisCodesArray(diagnosisCodes)) {
+    throw new Error('Bad diagnosis codes field: ' + diagnosisCodes);
+  } else {
+    return diagnosisCodes;
+  }
+};
+
 
 
 const isString = (s: any): s is string => {
@@ -177,6 +192,20 @@ const isDischarge = (d: any): d is Discharge => {
   return Boolean(
     d.date && isDateString(d.date) &&
     d.criteria && isString(d.criteria)
-  
     );
+};
+
+const isSickLeave = (s: any): s is SickLeave => {
+  return Boolean(
+    s.startDate && isDateString(s.startDate) &&
+    s.endDate && isDateString(s.endDate)
+  );
+};
+
+const isDiagnosisCodesArray = (a: any): a is Array<Diagnosis['code']> => {
+  return Array.isArray(a) && a.every(code => isDiagnosisCode(code));
+};
+
+const isDiagnosisCode = (c: any): c is Diagnosis['code'] => {
+  return isString(c);
 };
