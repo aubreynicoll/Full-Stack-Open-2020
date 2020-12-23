@@ -21,11 +21,17 @@ export enum Gender {
   Other = "other"
 }
 
+export enum EntryType {
+  HealthCheck = 'HealthCheck',
+  OccupationalHealthcare = 'OccupationalHealthcare',
+  HospitalEntry = 'HospitalEntry'
+}
+
 export enum HealthCheckRating {
-  Healthy = 0,
-  LowRisk = 1,
-  HighRisk = 2,
-  CriticalRisk = 3
+  Healthy,
+  LowRisk,
+  HighRisk,
+  CriticalRisk
 }
 
 interface BaseEntry {
@@ -64,5 +70,5 @@ export interface Patient {
   gender: Gender;
   ssn?: string;
   dateOfBirth?: string;
-  entries?: Entry[];
+  entries: Entry[];
 }

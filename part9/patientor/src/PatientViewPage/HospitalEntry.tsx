@@ -11,7 +11,7 @@ const HospitalEntry: React.FC<{ entry: Entry }> = ({ entry }) => {
       {entry.description} <br />
       <ul>
         {entry.diagnosisCodes?.map(code => (
-          <li>{code} - {diagnoses[code].name}</li>
+          <li key={code}>{code} - {diagnoses[code].name}</li>
         ))}  
       </ul>
       Discharged {entry.discharge.date} - {entry.discharge.criteria}

@@ -75,10 +75,10 @@ export enum Gender {
 }
 
 export enum HealthCheckRating {
-  Healthy = 0,
-  LowRisk = 1,
-  HighRisk = 2,
-  CriticalRisk = 3
+  Healthy,
+  LowRisk,
+  HighRisk,
+  CriticalRisk
 }
 
 export type PublicPatient = Omit<Patient, 'ssn' | 'entries'>;

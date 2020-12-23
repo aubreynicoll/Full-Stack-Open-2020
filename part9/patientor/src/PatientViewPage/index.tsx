@@ -1,15 +1,41 @@
 import React, {useState, useEffect } from 'react';
-import { Patient } from '../types';
-import { updatePatient, useStateValue } from "../state";
+import { Entry, Patient } from '../types';
+import { addEntryToPatient, updatePatient, useStateValue } from "../state";
 import axios from 'axios';
 import { apiBaseUrl } from '../constants';
 import { useParams } from 'react-router-dom';
 import EntryContainer from './EntryContainer';
+import { Table, Button } from 'semantic-ui-react';
+import AddEntryModal from '../AddEntryModal/index';
+import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
 
 const PatientViewPage: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
   const [patient, setPatient] = useState<Patient | null>(null);
   const { id } = useParams<{ id: string }>();
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const openModal = (): void => setModalOpen(true);
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(null);
+  };
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      const { data } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        values
+      );
+      dispatch(addEntryToPatient(id, data));
+      closeModal();
+    } catch (e) {
+      console.error(e.response.data);
+      setError(e.response.data.error);
+    }
+  };
 
   useEffect((): void => {
     const fetchPatientById = async () => {
@@ -36,30 +62,38 @@ const PatientViewPage: React.FC = () => {
   return (
     <div>
       <h2>{patient.name}</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Sex:</td>
-            <td>{patient.gender}</td>
-          </tr>
-          <tr>
-            <td>DOB:</td>
-            <td>{patient.dateOfBirth}</td>
-          </tr>
-          <tr>
-            <td>SSN:</td>
-            <td>{patient.ssn}</td>
-          </tr>
-          <tr>
-            <td>Occupation:</td>
-            <td>{patient.occupation}</td>
-          </tr>
-        </tbody>
-      </table>
+      <Table celled>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Sex:</Table.Cell>
+            <Table.Cell>{patient.gender}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>DOB:</Table.Cell>
+            <Table.Cell>{patient.dateOfBirth}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>SSN:</Table.Cell>
+            <Table.Cell>{patient.ssn}</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Occupation:</Table.Cell>
+            <Table.Cell>{patient.occupation}</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        error={error}
+        onClose={closeModal}
+      />
+      <Button onClick={openModal}>Add New Entry</Button>
 
       <h3>Entries</h3>
       {patient.entries?.map(entry => (
-        <EntryContainer entry={entry} />
+        <EntryContainer key={entry.id} entry={entry} />
       ))}
     </div>
   );

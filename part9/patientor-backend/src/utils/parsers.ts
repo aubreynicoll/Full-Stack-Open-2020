@@ -126,7 +126,7 @@ const toEntryType = (entryType: any): EntryType => {
 };
 
 const toHealthCheckRating = (healthCheckRating: any): HealthCheckRating => {
-  if (!healthCheckRating || !isHealthCheckRating(healthCheckRating)) {
+  if (!isHealthCheckRating(healthCheckRating)) {
     throw new Error('Bad health check rating field ' + healthCheckRating);
   } else {
     return healthCheckRating;
